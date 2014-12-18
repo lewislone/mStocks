@@ -9,14 +9,16 @@ import urllib2
 url_head_lumia = 'http://bbs.dospy.com/'
 #url = 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&ascdesc=DESC'
 url_lumia = 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&page='
+url_psp = 'http://bbs.dospy.com//forumdisplay.php?fid=141&filter=type&typeid=391&orderby=dateline&page='
 filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
 
 
 stock_list = [
                 {'name': 'sh',   'code': 'sh000001', 'mPrice': '0', 'mNu': '0'},
                 {'name': 'sz',   'code': 'sz399001', 'mPrice': '0', 'mNu': '0'},
-                {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '25.553', 'mNu': '900'},
-                {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '300'},
+                {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.881', 'mNu': '500'},
+                {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
+                {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
                 {'name': 'wskj', 'code': 'sz300017', 'mPrice': '0', 'mNu': '0'},
              ]
 url_stock = 'http://hq.sinajs.cn/list='
@@ -30,11 +32,11 @@ def getPageSourceCode(url):
         return html.decode("gbk").encode("utf8")
 
 
-def getLumiaInfo(url):
+def getLumiaInfo(url, keyword):
         html = getPageSourceCode(url)
         myItems = re.findall(filter_lumia.decode("gbk").encode("utf8"), html, re.S)
         for item in myItems:
-            if item[1].find('800') != -1:
+            if item[1].find(keyword) != -1:
                 print url_head_lumia + '/thread-' + item[0] + '.html'
                 print item[1]
 
@@ -97,13 +99,16 @@ if __name__ == '__main__':
             getstocksInfo()
             #time.sleep(10)
             print 'done\n'
+            sys.exit(1)
         
 
-    if sys.argv[1] == 'lumia':
+    if len(sys.argv[1]) != 0:
        #while 1:
             for i in [1,2,3,4,5,6,7]:
-               getLumiaInfo(url_lumia + str(i))
+               #getLumiaInfo(url_lumia + str(i), sys.argv[1])
+               getLumiaInfo(url_psp + str(i), sys.argv[1])
                print '\n'
             print 'done'
             #time.sleep(600)
+            sys.exit(1)
 
