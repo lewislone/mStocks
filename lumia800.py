@@ -16,9 +16,10 @@ filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
 stock_list = [
                 {'name': 'sh',   'code': 'sh000001', 'mPrice': '0', 'mNu': '0'},
                 {'name': 'sz',   'code': 'sz399001', 'mPrice': '0', 'mNu': '0'},
-                {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '100'},
-                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.561', 'mNu': '500'},
+                {'name': 'ylny', 'code': 'sh600277', 'mPrice': '8.826', 'mNu': '200'},
+                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.561', 'mNu': '300'},
                 {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '8.511', 'mNu': '600'},
+                {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '0'},
                 {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
                 {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
                 {'name': 'wskj', 'code': 'sz300017', 'mPrice': '0', 'mNu': '0'},
@@ -62,7 +63,7 @@ def getstockInfos(code):
     return result 
 
 def getstocksInfo():
-    print 'Time' + '\t\t\t' + 'Name' + '\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit'
+    print 'Time' + '\t\t\t' + 'Name' + '\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit' + '\t' + 'mPrice'
     code = "" 
     for item in stock_list:
         code = code + ',' + item['code']
@@ -77,7 +78,7 @@ def getstocksInfo():
             print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent)
         else:
             profit = (float(item[3]) - float(stock_list[i]['mPrice'])) * int(stock_list[i]['mNu'])
-            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) 
+            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) + '\t' + stock_list[i]['mPrice'] 
         i += 1
 
 #    for item in stock_list:
