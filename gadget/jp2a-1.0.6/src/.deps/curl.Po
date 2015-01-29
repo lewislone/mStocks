@@ -1,0 +1,3 @@
+curl.o: curl.c ../config.h
+
+../config.h:

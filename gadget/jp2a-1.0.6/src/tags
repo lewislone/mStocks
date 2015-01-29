@@ -1,0 +1,228 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ACLOCAL	Makefile	/^ACLOCAL = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run aclocal-1.9$/;"	m
+ACLOCAL_M4	Makefile	/^ACLOCAL_M4 = $(top_srcdir)\/aclocal.m4$/;"	m
+AMDEP_FALSE	Makefile	/^AMDEP_FALSE = #$/;"	m
+AMDEP_TRUE	Makefile	/^AMDEP_TRUE = $/;"	m
+AMTAR	Makefile	/^AMTAR = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run tar$/;"	m
+ASCII_PALETTE_SIZE	options.c	72;"	d	file:
+AUTOCONF	Makefile	/^AUTOCONF = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run autoconf$/;"	m
+AUTOHEADER	Makefile	/^AUTOHEADER = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run autoheader$/;"	m
+AUTOMAKE	Makefile	/^AUTOMAKE = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run automake-1.9$/;"	m
+AWK	Makefile	/^AWK = gawk$/;"	m
+BARLEN	image.c	287;"	d	file:
+BLUE	options.c	/^float RED[256], GREEN[256], BLUE[256], GRAY[256];$/;"	v
+CALC_HEIGHT	image.c	49;"	d	file:
+CALC_WIDTH	image.c	48;"	d	file:
+CC	Makefile	/^CC = gcc$/;"	m
+CCDEPMODE	Makefile	/^CCDEPMODE = depmode=gcc3$/;"	m
+CCLD	Makefile	/^CCLD = $(CC)$/;"	m
+CFLAGS	Makefile	/^CFLAGS = -g -O2$/;"	m
+COMPILE	Makefile	/^COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \\$/;"	m
+CONFIG_CLEAN_FILES	Makefile	/^CONFIG_CLEAN_FILES =$/;"	m
+CONFIG_HEADER	Makefile	/^CONFIG_HEADER = $(top_builddir)\/config.h$/;"	m
+CPP	Makefile	/^CPP = gcc -E$/;"	m
+CPPFLAGS	Makefile	/^CPPFLAGS = $/;"	m
+CTAGS	Makefile	/^CTAGS = ctags$/;"	m
+CYGPATH_W	Makefile	/^CYGPATH_W = echo$/;"	m
+DEFAULT_INCLUDES	Makefile	/^DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)$/;"	m
+DEFS	Makefile	/^DEFS = -DHAVE_CONFIG_H$/;"	m
+DEPDIR	Makefile	/^DEPDIR = .deps$/;"	m
+DISTFILES	Makefile	/^DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)$/;"	m
+DIST_COMMON	Makefile	/^DIST_COMMON = $(srcdir)\/Makefile.am $(srcdir)\/Makefile.in$/;"	m
+DIST_SOURCES	Makefile	/^DIST_SOURCES = $(jp2a_SOURCES)$/;"	m
+ECHO_C	Makefile	/^ECHO_C = $/;"	m
+ECHO_N	Makefile	/^ECHO_N = -n$/;"	m
+ECHO_T	Makefile	/^ECHO_T = $/;"	m
+EGREP	Makefile	/^EGREP = \/bin\/grep -E$/;"	m
+ETAGS	Makefile	/^ETAGS = etags$/;"	m
+EXEEXT	Makefile	/^EXEEXT = $/;"	m
+GRAY	options.c	/^float RED[256], GREEN[256], BLUE[256], GRAY[256];$/;"	v
+GREEN	options.c	/^float RED[256], GREEN[256], BLUE[256], GRAY[256];$/;"	v
+GREP	Makefile	/^GREP = \/bin\/grep$/;"	m
+HAVE_STDLIB_H	image.c	16;"	d	file:
+IF_OPT	options.c	176;"	d	file:
+IF_OPTS	options.c	175;"	d	file:
+IF_VAR	options.c	178;"	d	file:
+IF_VARS	options.c	177;"	d	file:
+INCLUDES	Makefile	/^INCLUDES = -I..\/include$/;"	m
+INSTALL	Makefile	/^INSTALL = \/usr\/bin\/install -c$/;"	m
+INSTALL_DATA	Makefile	/^INSTALL_DATA = ${INSTALL} -m 644$/;"	m
+INSTALL_HEADER	Makefile	/^INSTALL_HEADER = $(INSTALL_DATA)$/;"	m
+INSTALL_PROGRAM	Makefile	/^INSTALL_PROGRAM = ${INSTALL}$/;"	m
+INSTALL_SCRIPT	Makefile	/^INSTALL_SCRIPT = ${INSTALL}$/;"	m
+INSTALL_STRIP_PROGRAM	Makefile	/^INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s$/;"	m
+Image	image.c	/^} Image;$/;"	t	typeref:struct:Image_	file:
+Image_	image.c	/^typedef struct Image_ {$/;"	s	file:
+LDFLAGS	Makefile	/^LDFLAGS = $/;"	m
+LIBOBJS	Makefile	/^LIBOBJS = $/;"	m
+LIBS	Makefile	/^LIBS =  -ljpeg  -lncurses$/;"	m
+LINK	Makefile	/^LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@$/;"	m
+LTLIBOBJS	Makefile	/^LTLIBOBJS = $/;"	m
+MAKEINFO	Makefile	/^MAKEINFO = ${SHELL} \/home\/lewis\/work\/python\/jp2a-1.0.6\/missing --run makeinfo$/;"	m
+NORMAL_INSTALL	Makefile	/^NORMAL_INSTALL = :$/;"	m
+NORMAL_UNINSTALL	Makefile	/^NORMAL_UNINSTALL = :$/;"	m
+OBJEXT	Makefile	/^OBJEXT = o$/;"	m
+PACKAGE	Makefile	/^PACKAGE = jp2a$/;"	m
+PACKAGE_BUGREPORT	Makefile	/^PACKAGE_BUGREPORT = csl@sublevel3.org$/;"	m
+PACKAGE_NAME	Makefile	/^PACKAGE_NAME = jp2a$/;"	m
+PACKAGE_STRING	Makefile	/^PACKAGE_STRING = jp2a 1.0.6$/;"	m
+PACKAGE_TARNAME	Makefile	/^PACKAGE_TARNAME = jp2a$/;"	m
+PACKAGE_VERSION	Makefile	/^PACKAGE_VERSION = 1.0.6$/;"	m
+PATH_SEPARATOR	Makefile	/^PATH_SEPARATOR = :$/;"	m
+POST_INSTALL	Makefile	/^POST_INSTALL = :$/;"	m
+POST_UNINSTALL	Makefile	/^POST_UNINSTALL = :$/;"	m
+PRE_INSTALL	Makefile	/^PRE_INSTALL = :$/;"	m
+PRE_UNINSTALL	Makefile	/^PRE_UNINSTALL = :$/;"	m
+PROGRAMS	Makefile	/^PROGRAMS = $(bin_PROGRAMS)$/;"	m
+RED	options.c	/^float RED[256], GREEN[256], BLUE[256], GRAY[256];$/;"	v
+ROUND	image.c	29;"	d	file:
+SET_MAKE	Makefile	/^SET_MAKE = $/;"	m
+SHELL	Makefile	/^SHELL = \/bin\/sh$/;"	m
+SOURCES	Makefile	/^SOURCES = $(jp2a_SOURCES)$/;"	m
+STRIP	Makefile	/^STRIP = $/;"	m
+TERM_FIT_AUTO	include/options.h	40;"	d
+TERM_FIT_HEIGHT	include/options.h	39;"	d
+TERM_FIT_WIDTH	include/options.h	38;"	d
+TERM_FIT_ZOOM	include/options.h	37;"	d
+URL	curl.c	/^const char* URL;$/;"	v
+VERSION	Makefile	/^VERSION = 1.0.6$/;"	m
+WIN32_LEAN_AND_MEAN	term.c	38;"	d	file:
+ac_ct_CC	Makefile	/^ac_ct_CC = gcc$/;"	m
+am__aclocal_m4_deps	Makefile	/^am__aclocal_m4_deps = $(top_srcdir)\/configure.ac$/;"	m
+am__cd	Makefile	/^am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd$/;"	m
+am__configure_deps	Makefile	/^am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \\$/;"	m
+am__depfiles_maybe	Makefile	/^am__depfiles_maybe = depfiles$/;"	m
+am__fastdepCC_FALSE	Makefile	/^am__fastdepCC_FALSE = #$/;"	m
+am__fastdepCC_TRUE	Makefile	/^am__fastdepCC_TRUE = $/;"	m
+am__include	Makefile	/^am__include = include$/;"	m
+am__installdirs	Makefile	/^am__installdirs = "$(DESTDIR)$(bindir)"$/;"	m
+am__leading_dot	Makefile	/^am__leading_dot = .$/;"	m
+am__quote	Makefile	/^am__quote = $/;"	m
+am__tar	Makefile	/^am__tar = ${AMTAR} chof - "$$tardir"$/;"	m
+am__untar	Makefile	/^am__untar = ${AMTAR} xf -$/;"	m
+am_jp2a_OBJECTS	Makefile	/^am_jp2a_OBJECTS = html.$(OBJEXT) term.$(OBJEXT) curl.$(OBJEXT) \\$/;"	m
+ascii_palette	options.c	/^char ascii_palette[ASCII_PALETTE_SIZE + 1] = "   ...',;:clodxkO0KXNWM";$/;"	v
+aspect_ratio	image.c	/^void aspect_ratio(const int jpeg_width, const int jpeg_height) {$/;"	f
+auto_height	options.c	/^int auto_height = 1;$/;"	v
+auto_width	options.c	/^int auto_width = 0;$/;"	v
+binPROGRAMS_INSTALL	Makefile	/^binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)$/;"	m
+bin_PROGRAMS	Makefile	/^bin_PROGRAMS = jp2a$(EXEEXT)$/;"	m
+bindir	Makefile	/^bindir = ${exec_prefix}\/bin$/;"	m
+blue	image.c	/^	float *red, *green, *blue;$/;"	m	struct:Image_	file:
+blueweight	options.c	/^float blueweight = 0.1145f;$/;"	v
+build_alias	Makefile	/^build_alias = $/;"	m
+clear	image.c	/^void clear(Image* i) {$/;"	f
+clearscr	options.c	/^int clearscr = 0;$/;"	v
+close	curl.c	42;"	d	file:
+close	jp2a.c	30;"	d	file:
+colorfill	options.c	/^int colorfill = 0;$/;"	v
+convert_grayscale	options.c	/^int convert_grayscale = 0;$/;"	v
+copyright	options.c	/^const char* copyright = "Copyright (C) 2006 Christian Stigen Larsen";$/;"	v
+curl_config	Makefile	/^curl_config = no$/;"	m
+curl_download	curl.c	/^int curl_download(const char* url, const int debug) {$/;"	f
+curl_download_child	curl.c	/^void curl_download_child()$/;"	f
+datadir	Makefile	/^datadir = ${datarootdir}$/;"	m
+datarootdir	Makefile	/^datarootdir = ${prefix}\/share$/;"	m
+debug	options.c	/^int debug = 0;$/;"	v
+debugopt	curl.c	/^int fd[2], debugopt;$/;"	v
+decompress	image.c	/^void decompress(FILE *fp, FILE *fout) {$/;"	f
+depcomp	Makefile	/^depcomp = $(SHELL) $(top_srcdir)\/depcomp$/;"	m
+docdir	Makefile	/^docdir = ${datarootdir}\/doc\/${PACKAGE_TARNAME}$/;"	m
+dvidir	Makefile	/^dvidir = ${docdir}$/;"	m
+exec_prefix	Makefile	/^exec_prefix = ${prefix}$/;"	m
+fd	curl.c	/^int fd[2], debugopt;$/;"	v
+fileout	options.c	/^const char *fileout = "-"; \/\/ stdout$/;"	v
+flipx	options.c	/^int flipx = 0;$/;"	v
+flipy	options.c	/^int flipy = 0;$/;"	v
+free_image	image.c	/^void free_image(Image* i) {$/;"	f
+get_termsize	term.c	/^int get_termsize(int* _width, int* _height, char** err) {$/;"	f
+green	image.c	/^	float *red, *green, *blue;$/;"	m	struct:Image_	file:
+greenweight	options.c	/^float greenweight = 0.5866f;$/;"	v
+height	image.c	/^	int height;$/;"	m	struct:Image_	file:
+height	options.c	/^int height = 0;$/;"	v
+help	options.c	/^void help() {$/;"	f
+host_alias	Makefile	/^host_alias = $/;"	m
+html	options.c	/^int html = 0;$/;"	v
+html_bold	options.c	/^int html_bold = 1;$/;"	v
+html_entity	html.c	/^const char* html_entity(const char ch) {$/;"	f
+html_fontsize	options.c	/^int html_fontsize = 8;$/;"	v
+html_rawoutput	options.c	/^int html_rawoutput = 0;$/;"	v
+html_title	options.c	/^const char* html_title = "jp2a converted image";$/;"	v
+htmldir	Makefile	/^htmldir = ${docdir}$/;"	m
+includedir	Makefile	/^includedir = ${prefix}\/include$/;"	m
+infodir	Makefile	/^infodir = ${datarootdir}\/info$/;"	m
+init_image	image.c	/^void init_image(Image *i, const struct jpeg_decompress_struct *jpg) {$/;"	f
+install_sh	Makefile	/^install_sh = \/home\/lewis\/work\/python\/jp2a-1.0.6\/install-sh$/;"	m
+install_sh_DATA	Makefile	/^install_sh_DATA = $(install_sh) -c -m 644$/;"	m
+install_sh_PROGRAM	Makefile	/^install_sh_PROGRAM = $(install_sh) -c$/;"	m
+install_sh_SCRIPT	Makefile	/^install_sh_SCRIPT = $(install_sh) -c$/;"	m
+invert	options.c	/^int invert = 1;$/;"	v
+is_url	curl.c	/^int is_url(const char* s) {$/;"	f
+jp2a_LDADD	Makefile	/^jp2a_LDADD = $(LDADD)$/;"	m
+jp2a_OBJECTS	Makefile	/^jp2a_OBJECTS = $(am_jp2a_OBJECTS)$/;"	m
+jp2a_SOURCES	Makefile	/^jp2a_SOURCES = html.c term.c curl.c jp2a.c options.c image.c$/;"	m
+libdir	Makefile	/^libdir = ${exec_prefix}\/lib$/;"	m
+libexecdir	Makefile	/^libexecdir = ${exec_prefix}\/libexec$/;"	m
+license	options.c	/^const char* license   = "Distributed under the GNU General Public License (GPL) v2.";$/;"	v
+localedir	Makefile	/^localedir = ${datarootdir}\/locale$/;"	m
+localstatedir	Makefile	/^localstatedir = ${prefix}\/var$/;"	m
+lookup_resx	image.c	/^	int *lookup_resx;$/;"	m	struct:Image_	file:
+main	jp2a.c	/^int main(int argc, char** argv) {$/;"	f
+malloc_image	image.c	/^void malloc_image(Image* i) {$/;"	f
+mandir	Makefile	/^mandir = ${datarootdir}\/man$/;"	m
+mkdir_p	Makefile	/^mkdir_p = mkdir -p --$/;"	m
+mkinstalldirs	Makefile	/^mkinstalldirs = $(install_sh) -d$/;"	m
+normalize	image.c	/^void normalize(Image* i) {$/;"	f
+oldincludedir	Makefile	/^oldincludedir = \/usr\/include$/;"	m
+parse_options	options.c	/^void parse_options(int argc, char** argv) {$/;"	f
+passthru_write	curl.c	/^size_t passthru_write(void *buffer, size_t size, size_t nmemb, void *userp) {$/;"	f
+pdfdir	Makefile	/^pdfdir = ${docdir}$/;"	m
+pipe	curl.c	43;"	d	file:
+pixel	image.c	/^	float *pixel; \/\/ luminosity$/;"	m	struct:Image_	file:
+pkgdatadir	Makefile	/^pkgdatadir = $(datadir)\/jp2a$/;"	m
+pkgincludedir	Makefile	/^pkgincludedir = $(includedir)\/jp2a$/;"	m
+pkglibdir	Makefile	/^pkglibdir = $(libdir)\/jp2a$/;"	m
+precalc_rgb	options.c	/^void precalc_rgb(const float red, const float green, const float blue) {$/;"	f
+prefix	Makefile	/^prefix = \/usr\/local$/;"	m
+print_border	image.c	/^void print_border(const int width) {$/;"	f
+print_html_char	html.c	/^void print_html_char(FILE *f, const char ch,$/;"	f
+print_html_end	html.c	/^void print_html_end(FILE *f) {$/;"	f
+print_html_newline	html.c	/^void print_html_newline(FILE *f) {$/;"	f
+print_html_start	html.c	/^void print_html_start(const int fontsize, FILE *f) {$/;"	f
+print_image	image.c	/^void print_image(const Image* const i, const int chars, FILE *f) {$/;"	f
+print_image_colors	image.c	/^void print_image_colors(const Image* const i, const int chars, FILE* f) {$/;"	f
+print_info	image.c	/^void print_info(const struct jpeg_decompress_struct* jpg) {$/;"	f
+print_progress	image.c	/^void print_progress(const struct jpeg_decompress_struct* jpg) {$/;"	f
+print_version	options.c	/^void print_version() {$/;"	f
+process_scanline	image.c	/^void process_scanline(const struct jpeg_decompress_struct *jpg, const JSAMPLE* scanline, Image* i) {$/;"	f
+program_transform_name	Makefile	/^program_transform_name = s,x,x,$/;"	m
+psdir	Makefile	/^psdir = ${docdir}$/;"	m
+red	image.c	/^	float *red, *green, *blue;$/;"	m	struct:Image_	file:
+redweight	options.c	/^float redweight = 0.2989f;$/;"	v
+resize_x	image.c	/^	float resize_x;$/;"	m	struct:Image_	file:
+resize_y	image.c	/^	float resize_y;$/;"	m	struct:Image_	file:
+sbindir	Makefile	/^sbindir = ${exec_prefix}\/sbin$/;"	m
+sharedstatedir	Makefile	/^sharedstatedir = ${prefix}\/com$/;"	m
+srcdir	Makefile	/^srcdir = .$/;"	m
+subdir	Makefile	/^subdir = src$/;"	m
+sysconfdir	Makefile	/^sysconfdir = ${prefix}\/etc$/;"	m
+target_alias	Makefile	/^target_alias = $/;"	m
+term_height	options.c	/^int term_height = 0;$/;"	v
+term_width	options.c	/^int term_width = 0;$/;"	v
+termfit	options.c	/^int termfit =$/;"	v
+top_builddir	Makefile	/^top_builddir = ..$/;"	m
+top_srcdir	Makefile	/^top_srcdir = ..$/;"	m
+transform	Makefile	/^transform = $(program_transform_name)$/;"	m
+url	options.c	/^const char* url       = "http:\/\/jp2a.sf.net";$/;"	v
+use_border	options.c	/^int use_border = 0;$/;"	v
+usecolors	options.c	/^int usecolors = 0;$/;"	v
+verbose	options.c	/^int verbose = 0;$/;"	v
+version	options.c	/^const char* version   = PACKAGE_STRING;$/;"	v
+width	image.c	/^	int width;$/;"	m	struct:Image_	file:
+width	options.c	/^int width =$/;"	v
+yadds	image.c	/^	int *yadds;$/;"	m	struct:Image_	file:
