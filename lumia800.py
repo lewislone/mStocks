@@ -16,9 +16,9 @@ filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
 stock_list = [
                 {'name': 'sh',   'code': 'sh000001', 'mPrice': '0', 'mNu': '0'},
                 {'name': 'sz',   'code': 'sz399001', 'mPrice': '0', 'mNu': '0'},
+                {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '8.236', 'mNu': '1100'},
                 {'name': 'ylny', 'code': 'sh600277', 'mPrice': '8.826', 'mNu': '200'},
-                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.561', 'mNu': '300'},
-                {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '8.511', 'mNu': '600'},
+                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.175', 'mNu': '1000'},
                 {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '0'},
                 {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
                 {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
