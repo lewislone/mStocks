@@ -7,22 +7,26 @@ import urllib
 import urllib2
 
 url_head_lumia = 'http://bbs.dospy.com/'
-#url = 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&ascdesc=DESC'
-url_lumia = 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&page='
-url_psp = 'http://bbs.dospy.com//forumdisplay.php?fid=141&filter=type&typeid=391&orderby=dateline&page='
+url = {'lumia': 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&page=',
+        'psp': 'http://bbs.dospy.com//forumdisplay.php?fid=141&filter=type&typeid=391&orderby=dateline&page=',
+        'filco': 'http://www.diatec.co.jp/shop/det.php?prod_c=888',
+        'mac': 'http://bbs.feng.com/forum.php?mod=forumdisplay&fid=29&orderby=lastpost&typeid=84&orderby=lastpost&typeid=84&filter=lastpost&page=',
+    }
 filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
+filter_filco = '<TD ALIGN="left" class=text2>(.*?)</TD></TR>'
 
 
 stock_list = [
                 {'name': 'sh',   'code': 'sh000001', 'mPrice': '0', 'mNu': '0'},
                 {'name': 'sz',   'code': 'sz399001', 'mPrice': '0', 'mNu': '0'},
-                {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '8.236', 'mNu': '1100'},
-                {'name': 'ylny', 'code': 'sh600277', 'mPrice': '8.826', 'mNu': '200'},
-                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.175', 'mNu': '1000'},
+                {'name': 'ylny', 'code': 'sh600277', 'mPrice': '11.867', 'mNu': '300'},
+                {'name': 'zgpa', 'code': 'sh601318', 'mPrice': '88.907', 'mNu': '100'},
+                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.093', 'mNu': '0'},
+                {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '14.5', 'mNu': '0'},
                 {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '0'},
                 {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
                 {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
-                {'name': 'wskj', 'code': 'sz300017', 'mPrice': '0', 'mNu': '0'},
+                {'name': 'wskj', 'code': 'sz300017', 'mPrice': '48.54', 'mNu': '0'},
              ]
 url_stock = 'http://hq.sinajs.cn/list='
 
@@ -34,6 +38,11 @@ def getPageSourceCode(url):
         html = urllib2.urlopen(login_request).read()
         return html.decode("gbk").encode("utf8")
 
+def getFilcoInfo(url, keyword):
+        html = getPageSourceCode(url)
+        myItems = re.findall(filter_filco, html, re.S)
+        for item in myItems:
+            print item.decode('utf-8')
 
 def getLumiaInfo(url, keyword):
         html = getPageSourceCode(url)
@@ -63,7 +72,7 @@ def getstockInfos(code):
     return result 
 
 def getstocksInfo():
-    print 'Time' + '\t\t\t' + 'Name' + '\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit' + '\t' + 'mPrice'
+    print 'Time' + '\t\t\t' + 'Name' + '\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit' + '\t' + '%' + '\t' + 'mPrice'
     code = "" 
     for item in stock_list:
         code = code + ',' + item['code']
@@ -78,7 +87,8 @@ def getstocksInfo():
             print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent)
         else:
             profit = (float(item[3]) - float(stock_list[i]['mPrice'])) * int(stock_list[i]['mNu'])
-            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) + '\t' + stock_list[i]['mPrice'] 
+            profit_persent = (float(item[3]) - float(stock_list[i]['mPrice'])) / float(stock_list[i]['mPrice']) * 100
+            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) + '\t' + str(profit_persent) + '\t' + stock_list[i]['mPrice'] 
         i += 1
 
 #    for item in stock_list:
@@ -104,12 +114,17 @@ if __name__ == '__main__':
             print 'done\n'
             sys.exit(1)
         
+    if sys.argv[1] == 'filco':
+        getFilcoInfo(url[sys.argv[1]], '')
+        print 'done\n'
+        sys.exit(1)
 
-    if len(sys.argv[1]) != 0:
+    if len(sys.argv[1]) != 0 and len(sys.argv[2]) != 0:
        #while 1:
             for i in [1,2,3,4,5,6,7]:
                #getLumiaInfo(url_lumia + str(i), sys.argv[1])
-               getLumiaInfo(url_psp + str(i), sys.argv[1])
+               #getLumiaInfo(url_psp + str(i), sys.argv[1])
+               getLumiaInfo(url[sys.argv[1]] + str(i), sys.argv[2])
                print '\n'
             print 'done'
             #time.sleep(600)
