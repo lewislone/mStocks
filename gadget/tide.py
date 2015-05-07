@@ -2,7 +2,7 @@
 import os
 from datetime import *
 
-lunarInfo = [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,#1900-1909
+lunarInfos = [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x09ad0,0x055d2,#1900-1909
             0x04ae0,0x0a5b6,0x0a4d0,0x0d250,0x1d255,0x0b540,0x0d6a0,0x0ada2,0x095b0,0x14977,#1910-1919
             0x04970,0x0a4b0,0x0b4b5,0x06a50,0x06d40,0x1ab54,0x02b60,0x09570,0x052f2,0x04970,#1920-1929
             0x06566,0x0d4a0,0x0ea50,0x06e95,0x05ad0,0x02b60,0x186e3,0x092e0,0x1c8d7,0x0c950,#1930-1939
@@ -23,7 +23,16 @@ lunarInfo = [0x04bd8,0x04ae0,0x0a570,0x054d5,0x0d260,0x0d950,0x16554,0x056a0,0x0
             0x052d0,0x0a9b8,0x0a950,0x0b4a0,0x0b6a6,0x0ad50,0x055a0,0x0aba4,0x0a5b0,0x052b0,#2070-2079
             0x0b273,0x06930,0x07337,0x06aa0,0x0ad50,0x14b55,0x04b60,0x0a570,0x054e4,0x0d160,#2080-2089
             0x0e968,0x0d520,0x0daa0,0x16aa6,0x056d0,0x04ae0,0x0a9d4,0x0a2d0,0x0d150,0x0f252,#2090-2099
-            0x0d520],#2100
+            0x0d520]#2100
+lunarMonths = [u"正月",u"二月",u"三月",u"四月",u"五月",u"六月",u"七月",u"八月",u"九月",u"十月",u"十一月",u"腊月"]
+lunarDays = [u'初一',u'初二',u'初三',u'初四',u'初五',u'初六',u'初七',u'初八',u'初九',u'初十',
+            u'十一',u'十二',u'十三',u'十四',u'十五',u'十六',u'十七',u'十八',u'十九',u'二十',
+            u'廿一',u'廿二',u'廿三',u'廿四',u'廿五',u'廿六',u'廿七',u'廿八',u'廿九',u'三十',
+            u'卅一',]
+
+BIG_LEAP = 0xF0000
+IS_LEAP = 0x0000F
+EVERY_M = 0x0FFF0
 
 class lunar:
     def __init__(self):
@@ -35,13 +44,78 @@ class lunar:
 
     def offset_with_1900(self, when):
         offset = when - date(1900, 1, 31)
-        print offset.days
+        return offset.days
 
-    def get_lunar_year_by_offset(self, offset):
+    def get_solar_year_days(self, year):
+        if year % 4 == 0:
+            return 366 
+        return 365
 
+    def get_solar_days_of_this_year(self, date):
+        days = 0
+        for month in range(1, date[1]-1):
+            if month == 1:
+                break;
+            if month == 2 and date[0] % 4 == 0 and date[0] != 1900:
+                day += 29
+                continue
+            if (month == 2 and date[0] % 4 != 0) or date[0] == 1900:
+                day += 28
+                continue
+            if month == 3 or month == 5 or month == 7 or month == 8 or month == 11:
+                days += 31
+            else:
+                days += 30
+
+        days += date[2]
+        return days
+
+    #fuck offset_with_1900
+    def get_solar_days_between(self, start, end):
+        days = 0
+        for year in range(start[0], end[0]):
+            days += self.get_solar_year_days(year)
+
+        return days - self.get_solar_year_days(end[0]) - self.get_solar_days_of_this_year(start) + self.get_solar_days_of_this_year(end)
+
+    def get_lunar_year_days(self, lunarInfo):
+        days = 348 #29*12
+        tmp = int((lunarInfo & BIG_LEAP)>>16)
+        if lunarInfo & IS_LEAP != 0:
+            days = days + tmp + 29 
+        tmp = (lunarInfo & EVERY_M) >> 4
+        for i in range(0, 11):
+            days = days + int((tmp >> i) & 0x00001)
+        return days
+
+    def get_lunar_day_by_offset(self, offset):
+        sum_days = 0
+        for lunar in lunarInfos:
+            sum_days += self.get_lunar_year_days(lunar)
+            if sum_days >= offset:
+                break
+
+        days = 0
+        tmp = (lunar & EVERY_M) >> 4
+        dupMonth = (lunar & IS_LEAP)
+        for i in range(0, 11):
+            days += 29 + int((tmp >> (11-i)) & 0x00001)
+            if i+1 == dupMonth:
+                days = days + 29 + int((lunar & BIG_LEAP)>>16) 
+                if days >= (offset - (sum_days - self.get_lunar_year_days(lunar))):
+                    break
+            if days >= (offset - (sum_days - self.get_lunar_year_days(lunar))):
+                break
+        print lunarMonths[i]
+        print lunarDays[(29 + ((tmp >> 11-i) & 0x00001)) - (days - (offset - (sum_days - self.get_lunar_year_days(lunar))))]
+
+        return (29 + ((tmp >> 11-i) & 0x00001)) - (days - (offset - (sum_days - self.get_lunar_year_days(lunar))))
 
 
 lunar = lunar() 
 if __name__ == '__main__':
     (y, m, d, h, mi, s) = lunar.get_today_solar_calendar()
-    lunar.offset_with_1900(date(y, m, d))
+    lunar.get_lunar_day_by_offset(lunar.offset_with_1900(date(y, m, d)))
+    a = lunar.get_lunar_day_by_offset(lunar.get_solar_days_between([1900, 1, 31], [y, m, d]))
+    print int(0.8 * a) + 12 
+    print ((0.8 * a) - int(0.8 * a))*60 + 25 
