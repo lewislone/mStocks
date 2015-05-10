@@ -106,16 +106,34 @@ class lunar:
                     break
             if days >= (offset - (sum_days - self.get_lunar_year_days(lunar))):
                 break
-        print lunarMonths[i]
-        print lunarDays[(29 + ((tmp >> 11-i) & 0x00001)) - (days - (offset - (sum_days - self.get_lunar_year_days(lunar))))]
+        #print lunarMonths[i]
+        day = (29 + ((tmp >> 11-i) & 0x00001)) - (days - (offset - (sum_days - self.get_lunar_year_days(lunar))))
 
-        return (29 + ((tmp >> 11-i) & 0x00001)) - (days - (offset - (sum_days - self.get_lunar_year_days(lunar))))
+        return (lunarMonths[i], lunarDays[day], day)
 
 
 lunar = lunar() 
 if __name__ == '__main__':
     (y, m, d, h, mi, s) = lunar.get_today_solar_calendar()
-    lunar.get_lunar_day_by_offset(lunar.offset_with_1900(date(y, m, d)))
-    a = lunar.get_lunar_day_by_offset(lunar.get_solar_days_between([1900, 1, 31], [y, m, d]))
-    print int(0.8 * a) + 12 
-    print ((0.8 * a) - int(0.8 * a))*60 + 25 
+    print (y, m , d)
+    #lunar.get_lunar_day_by_offset(lunar.offset_with_1900(date(y, m, d)))#something wrong
+    (M, D, d) = lunar.get_lunar_day_by_offset(lunar.get_solar_days_between([1900, 1, 31], [y, m, d]))
+    print M + ' ' + D 
+    print int(0.8 * (d - 15)) + 12 
+    print ((0.8 * d) - int(0.8 * d))*60 + 25 
+
+    d = d + 1
+    if d >= 15: 
+        h = int(0.8 * (d - 15)) + 12
+    else:
+        h = int(0.8 * d) + 12
+
+    if d == 1:
+        mi = ((0.8 * d) - int(0.8 * d))*60 - 25
+    else:
+        mi = ((0.8 * d) - int(0.8 * d))*60 + 25
+    if mi >= 60:
+        h = h + 1
+        mi = mi - 60
+    print "%d:%d" % (h, mi)
+    
