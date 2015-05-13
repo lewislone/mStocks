@@ -6,6 +6,18 @@ class deSudoku:
         print("init...")
         self.sudoku = sudoku 
         self.full = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    def __del(self, set1, set2):
+        for i in set2:
+            if i in set1:
+                set1.remove(i)
+        return set1
+    def __add(self, set1, set2):
+        return set1 + set2   
+    def __or(self, set1, set2):
+        return [i for i in set1 if i in set2] 
+    def __xor(self, set1, set2):
+        return [i for i in set1 if i not in set2] 
     
     def printSudoku(self):
         print('###########################')
@@ -45,9 +57,9 @@ class deSudoku:
                      7|8|9 
         '''
         set = []
-        set += self.sudoku[((square-1)/3)*3][((square%3)*2) : (3+(square%3)*2)]
-        set += self.sudoku[((square-1)/3)*3+1][((square%3)*2) : (3+(square%3)*2)]
-        set += self.sudoku[((square-1)/3)*3+2][((square%3)*2) : (3+(square%3)*2)]
+        set += self.sudoku[((square-1)/3)*3][(((square-1)%3)*3) : (3+((square-1)%3)*3)]
+        set += self.sudoku[((square-1)/3)*3+1][(((square-1)%3)*3) : (3+((square-1)%3)*3)]
+        set += self.sudoku[((square-1)/3)*3+2][(((square-1)%3)*3) : (3+((square-1)%3)*3)]
         return set
     def emptyNuInSquare(self, square): 
         '''find empty site on square'''
@@ -67,11 +79,6 @@ class deSudoku:
         rowChance = self.emptyNuInRow(row)
         columnSet = self.nuInColumn(column)
         squareSet = self.nuInSquare(square)
-        print rowChance
-        print columnSet
-        print squareSet
-        print pos 
-        print square 
         for i in columnSet:
             if i in rowChance:
                 rowChance.remove(i)
@@ -82,25 +89,64 @@ class deSudoku:
             self.sudoku[row][column] = rowChance[0]
             self.printSudoku()
         elif len(rowChance) == 0:
-            print '#ERR#'
+            print('#ERR#')
         else:
             return
         
     #rule number 2
-    def ruleOnlyOneNuInLine(self):
+    def ruleOnlyOneNuInLine(self, pos):
         '''every line/column has one "9"'''
+        row = pos[0]
+        column = pos[1]
+        if (row-1)/3 != row/3:
+            otherRow1 = row + 1
+            otherRow2 = row + 2
+        elif (row+1)/3 != row/3:
+            otherRow1 = row - 1
+            otherRow2 = row - 2
+        else:
+            otherRow1 = row - 1
+            otherRow2 = row + 1 
+
+        if (column-1)/3 != column/3:
+            otherColumn1 = column + 1
+            otherColumn2 = column + 2
+        elif (column+1)/3 != column/3:
+            otherColumn1 = column - 1
+            otherColumn2 = column - 2
+        else:
+            otherColumn1 = column - 1
+            otherColumn2 = column + 1
+
+        row1 = self.nuInRow(otherRow1)
+        row2 = self.nuInRow(otherRow2)
+        column1 = self.nuInColumn(otherColumn1)
+        column2 = self.nuInColumn(otherColumn2)
+        del(row1[min(column, otherColumn1, otherColumn2) : max(column, otherColumn1, otherColumn2)+1])
+        del(row2[min(column, otherColumn1, otherColumn2) : max(column, otherColumn1, otherColumn2)+1])
+        del(column1[min(column, otherRow1, otherRow2) : max(column, otherRow1, otherRow2)+1])
+        del(column2[min(column, otherRow1, otherRow2) : max(column, otherRow1, otherRow2)+1])
+        
+        common1 = self.__or(row1, row2)
+        common2 = self.__or(column1, column2)
+        
+        common = self.__or(common1, common2)
+        if len(common) == 1:
+            self.sudoku[row, column] = common
+        elif len(common) > 1:
+            print('#ERR#') 
 
 if __name__ == '__main__':
     test = [
-            [0, 3, 6, 0, 0, 0, 0, 0, 2],
-            [0, 0, 5, 0, 0, 9, 0, 0, 0],
-            [9, 0, 2, 4, 0, 0, 0, 0, 8],
-            [0, 0, 0, 0, 3, 0, 0, 7, 4],
-            [0, 0, 0, 0, 5, 0, 0, 0, 0],
-            [3, 9, 0, 0, 8, 0, 0, 0, 0],
-            [5, 0, 0, 0, 0, 1, 4, 0, 7],
-            [0, 0, 0, 7, 0, 0, 1, 0, 0],
-            [2, 0, 0, 0, 0, 0, 3, 8, 0]
+            [9, 0, 0, 1, 0, 0, 0, 0, 2],
+            [0, 0, 1, 0, 7, 0, 0, 0, 5],
+            [0, 6, 0, 0, 0, 0, 0, 9, 0],
+            [7, 0, 0, 0, 0, 0, 1, 0, 0],
+            [0, 0, 4, 0, 8, 0, 0, 0, 2],
+            [0, 5, 0, 0, 3, 4, 0, 0, 0],
+            [0, 0, 0, 8, 0, 0, 4, 0, 0],
+            [5, 0, 0, 0, 0, 0, 0, 6, 0],
+            [0, 7, 2, 0, 0, 0, 0, 0, 9]
             ]
     de = deSudoku(test)
 
@@ -109,4 +155,5 @@ if __name__ == '__main__':
         for j in range(0, 9):
             if test[i][j] == 0:
                 de.ruleCheckRowColumnSquare([i, j])
+                de.ruleOnlyOneNuInLine([i, j])
     
