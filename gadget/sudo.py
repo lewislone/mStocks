@@ -89,7 +89,7 @@ class deSudoku:
             self.sudoku[row][column] = rowChance[0]
             self.printSudoku()
         elif len(rowChance) == 0:
-            print('#ERR#')
+            print('#rule number 1 ERR#')
         else:
             return
         
@@ -122,23 +122,45 @@ class deSudoku:
         row2 = self.nuInRow(otherRow2)
         column1 = self.nuInColumn(otherColumn1)
         column2 = self.nuInColumn(otherColumn2)
-        del(row1[min(column, otherColumn1, otherColumn2) : max(column, otherColumn1, otherColumn2)+1])
-        del(row2[min(column, otherColumn1, otherColumn2) : max(column, otherColumn1, otherColumn2)+1])
-        del(column1[min(column, otherRow1, otherRow2) : max(column, otherRow1, otherRow2)+1])
-        del(column2[min(column, otherRow1, otherRow2) : max(column, otherRow1, otherRow2)+1])
+        del(row1[min(column, otherColumn1, otherColumn2)+1 : max(column, otherColumn1, otherColumn2)+1])
+        del(row2[min(column, otherColumn1, otherColumn2)+1 : max(column, otherColumn1, otherColumn2)+1])
+        del(column1[min(column, otherRow1, otherRow2)+1 : max(column, otherRow1, otherRow2)+1])
+        del(column2[min(column, otherRow1, otherRow2)+1 : max(column, otherRow1, otherRow2)+1])
+
+        if self.sudoku[otherRow1][column] != 0:
+           row1 = self.full 
+        if self.sudoku[otherRow2][column] != 0:
+           row2 = self.full 
+        if self.sudoku[row][otherColumn1] != 0:
+           column1 = self.full 
+        if self.sudoku[row][otherColumn2] != 0:
+           column2 = self.full 
         
         common1 = self.__or(row1, row2)
         common2 = self.__or(column1, column2)
-        
         common = self.__or(common1, common2)
+
+        if row == 2 and column == 8:
+            print  pos
+            print otherRow1
+            print otherRow2
+            print otherColumn1
+            print otherColumn2
+            print row1
+            print row2
+            print column1
+            print column2
+
         if len(common) == 1:
-            self.sudoku[row, column] = common
+            self.sudoku[row][column] = common[0]
+            self.printSudoku()
         elif len(common) > 1:
-            print('#ERR#') 
+            print('#rule number 2 ERR#')
+
 
 if __name__ == '__main__':
     test = [
-            [9, 0, 0, 1, 0, 0, 0, 0, 2],
+            [9, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 7, 0, 0, 0, 5],
             [0, 6, 0, 0, 0, 0, 0, 9, 0],
             [7, 0, 0, 0, 0, 0, 1, 0, 0],
@@ -154,6 +176,6 @@ if __name__ == '__main__':
     for i in range(0, 9):
         for j in range(0, 9):
             if test[i][j] == 0:
-                de.ruleCheckRowColumnSquare([i, j])
+                #de.ruleCheckRowColumnSquare([i, j])
                 de.ruleOnlyOneNuInLine([i, j])
     
