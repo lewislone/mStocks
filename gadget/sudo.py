@@ -157,21 +157,45 @@ class deSudoku:
         if row == 9 and column == 9:
             self.printSudoku()
             print (pos, otherRow1, otherRow2, otherColumn1, otherColumn2)
-            print row1
-            print row2
-            print column1
-            print column2
-            print common 
+            print tmpRow1
+            print tmpRow2
+            print tmpColumn1
+            print tmpColumn2
+
+        common = self.__or(row1, column1)
+        if len(common) == 1 and common[0] not in self.nuInSquare(self.whichSquare(pos)) \
+                    and self.sudoku[row][otherColumn2] != 0 and self.sudoku[otherRow2][column] != 0 and self.sudoku[otherRow2][otherColumn2] != 0:
+           self.sudoku[row][column] = common[0]
+           print((pos, self.sudoku[row][column]))
+           self.printSudoku()
+        common = self.__or(row2, column1)
+        if len(common) == 1 and common[0] not in self.nuInSquare(self.whichSquare(pos)) \
+                    and self.sudoku[row][otherColumn2] != 0 and self.sudoku[otherRow1][column] != 0 and self.sudoku[otherRow1][otherColumn2] != 0:
+           self.sudoku[row][column] = common[0]
+           print((pos, self.sudoku[row][column]))
+           self.printSudoku()
+        common = self.__or(row1, column2)
+        if len(common) == 1 and common[0] not in self.nuInSquare(self.whichSquare(pos)) \
+                    and self.sudoku[row][otherColumn1] != 0 and self.sudoku[otherRow2][column] != 0 and self.sudoku[otherRow2][otherColumn1] != 0:
+           self.sudoku[row][column] = common[0]
+           print((pos, self.sudoku[row][column]))
+           self.printSudoku()
+        common = self.__or(row2, column2)
+        if len(common) == 1 and common[0] not in self.nuInSquare(self.whichSquare(pos)) \
+                    and self.sudoku[row][otherColumn1] != 0 and self.sudoku[otherRow1][column] != 0 and self.sudoku[otherRow1][otherColumn1] != 0:
+           self.sudoku[row][column] = common[0]
+           print((pos, self.sudoku[row][column]))
+           self.printSudoku()
 
         for i in commonRow:
             if i not in self.nuInRow(row) and i not in self.nuInColumn(column) and i not in self.nuInSquare(self.whichSquare(pos)):
                 self.sudoku[row][column] = commonRow[0]
-                print(pos)
+                print((pos, self.sudoku[row][column]))
                 self.printSudoku()
         for i in commonColumn:
             if i not in self.nuInRow(row) and i not in self.nuInColumn(column) and i not in self.nuInSquare(self.whichSquare(pos)):
                 self.sudoku[row][column] = commonColumn[0]
-                print(pos)
+                print((pos, self.sudoku[row][column]))
                 self.printSudoku()
 
 
