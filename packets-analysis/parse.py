@@ -3,9 +3,12 @@ import os
 import re
 import sys
 import json
-import dpkt
 import hashlib
 import StringIO
+sys.path.append('./dpkt-1.7/')
+import dpkt
+sys.path.append('./XlsxWriter-0.7.3/')
+import xlsxwriter
 #from matplotlib.pyplot import *
 
 class TCP_STREAM:
@@ -17,7 +20,9 @@ class TCP_STREAM:
                             's_ip':
                             'c_port':
                             's_port':
+                            'c_des':,
                             'c_packets':[],
+                            's_des':,
                             's_packets':[],
                             'data_len':,
                             'statt_time':,
@@ -49,9 +54,11 @@ class TCP_STREAM:
 
                     if stream_id in self.streams:
                         self.streams[stream_id]['c_packets'].append(packet)
+                        self.streams[stream_id]['c_des'] = des
                         self.streams[stream_id]['data_len'] += len(tcppkt.data)
                     elif stream_id_revert in self.streams:
                         self.streams[stream_id_revert]['s_packets'].append(packet)
+                        self.streams[stream_id_revert]['s_des'] = des_revert
                         self.streams[stream_id_revert]['data_len'] += len(tcppkt.data)
                     else:#new
                         self.streams[stream_id] = {} 
@@ -119,19 +126,83 @@ class PCAP_PARSE:
 
 parse = PCAP_PARSE()
 
+class ANALYSIS_TCP:
+        def __init__(self, file_name, streams_info):
+            '''analysis init...
+            '''
+            self.xlsx = xlsxwriter.Workbook(file_name + '.xlsx')
+            self.streams = streams_info
+            self.timeformat = self.xlsx.add_format()
+            self.timeformat.set_num_format('0.00000000')
+
+        def seq_ack_time(self):
+            sheet = self.xlsx.add_worksheet('seq_ack')
+
+            for id in self.streams:
+                sheet.write('A1', 'seqtime')
+                sheet.write('A2', 'seq')
+                sheet.write('A1', 'acktime')
+                sheet.write('A2', 'ack')
+                seq = [self.streams[id]['s_packets'][i]['seq']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['s_packets']))]
+                ack = [self.streams[id]['c_packets'][i]['ack']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['c_packets']))]
+                seqtime = [self.streams[id]['s_packets'][i]['ts']-self.streams[id]['start_time'] for i in range(0, len(self.streams[id]['s_packets']))]
+                acktime = [self.streams[id]['c_packets'][i]['ts']-self.streams[id]['start_time'] for i in range(0, len(self.streams[id]['c_packets']))]
+                ack[0] = 0
+                sheet.write_row('B1', seqtime, self.timeformat)
+                sheet.write_row('B2', seq)
+                sheet.write_row('B3', acktime, self.timeformat)
+                sheet.write_row('B4', ack)
+
+            #chart
+            chart = self.xlsx.add_chart({'type': 'line'})
+            chart.add_series({
+                    'categories': '=seq_ack!$B$2:$QVS$2',
+                    'values':     '=seq_ack!$B$1:$QVS$1',
+                    'line':       {'color': 'red'},
+            })
+            chart.add_series({
+                    'categories': '=seq_ack!$B$4:$HXS$4',
+                    'values':     '=seq_ack!$B$3:$HXS$3',
+                    'line':       {'color': 'blue'},
+            })
+
+            chart2 = self.xlsx.add_chart({'type': 'line'})
+            chart2.add_series({
+                    'categories': '=seq_ack!$B$1:$QVS$1',
+                    'values':     '=seq_ack!$B$2:$QVS$2',
+                    'line':       {'color': 'red'},
+            })
+            chart2.add_series({
+                    'categories': '=seq_ack!$B$3:$HXS$3',
+                    'values':     '=seq_ack!$B$4:$HXS$4',
+                    'line':       {'color': 'blue'},
+            })
+            #chart.set_size({'width': 720, 'height': 576})
+            sheet.insert_chart('B6', chart)
+            sheet.insert_chart('J6', chart2)
+
+        def save_work(self):
+            self.xlsx.close()
+
+
 if __name__ == '__main__':
     cap_file = sys.argv[1]
     if not os.path.exists(cap_file):
         print cap_file + " not exist"
-        exit() 
+        exit()
 
-    #f = file(cap_file)
-    f = file("/home/lewis/work/tmp/xx.cap")
+    f = file(cap_file)
+    #f = file("/home/lewis/work/tmp/xx.cap")
     parse.collect_streams(f)
-    print parse.stream.streams 
+    print parse.stream.streams
 
     file = open('./stream.json', "ab")
     json.dump(parse.stream.streams, file)
+
+    analysis = ANALYSIS_TCP(cap_file, parse.stream.streams)
+    analysis.seq_ack_time()
+    analysis.save_work()
+
 
    # stream = {}
    # for stream in streams:
