@@ -21,7 +21,7 @@ if __name__ == '__main__':
     json.dump(collect.stream.streams, file)
 
     analysis = tcpAnalyse.ANALYSIS_TCP(cap_file, collect.stream.streams)
-    analysis.seq_ack_time()
+    analysis.start()
     analysis.save_work()
 
 

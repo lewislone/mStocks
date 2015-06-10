@@ -8,21 +8,41 @@ class TCP_STREAM:
         def __init__(self):
             '''stream init...
                streams= {
-                         'id':{
-                            'c_ip':
-                            's_ip':
-                            'c_port':
-                            's_port':
-                            'c_des':,
-                            'c_packets':[],
-                            's_des':,
-                            's_packets':[],
-                            'data_len':,
-                            'statt_time':,
-                            'end_time':},
-                        'id':{...},
-                        ...,
-                        'id':{...}}
+                         'id_1':  {
+                                    'c_ip':
+                                    's_ip':
+                                    'c_port':
+                                    's_port':
+                                    'c_des':,
+                                    'c_packets':[{
+                                                   'ts': , 
+                                                   'id': , 
+                                                   'src': , 
+                                                   'dst': , 
+                                                   'sport': ,
+                                                   'dport': ,
+                                                   'flags': ,
+                                                   'seq': ,
+                                                   'ack': ,
+                                                   'win': }, {},{},... ,{...}],
+                                    's_des':,
+                                    's_packets':[{
+                                                   'ts': , 
+                                                   'id': , 
+                                                   'src': , 
+                                                   'dst': , 
+                                                   'sport': ,
+                                                   'dport': ,
+                                                   'flags': ,
+                                                   'seq': ,
+                                                   'ack': ,
+                                                   'win': }, {},{},... ,{...}],
+                                    'data_len':,
+                                    'statt_time':,
+                                    'end_time':},
+                        'id_2':   {...},
+                               ...,
+                        'id_x':   {...}}
             '''
             self.streams = {} 
         def add(self, ts, ippkt, tcppkt):
@@ -54,6 +74,10 @@ class TCP_STREAM:
                         self.streams[stream_id_revert]['s_des'] = des_revert
                         self.streams[stream_id_revert]['data_len'] += len(tcppkt.data)
                     else:#new
+                        if packet['flags'] & dpkt.tcp.TH_SYN:
+                           print 'SYN'
+                        else:
+                           print 'not SYN'
                         self.streams[stream_id] = {} 
                         self.streams[stream_id]['c_ip'] = src
                         self.streams[stream_id]['s_ip'] = dst
