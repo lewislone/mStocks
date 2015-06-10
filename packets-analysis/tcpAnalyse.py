@@ -32,8 +32,9 @@ class ANALYSIS_TCP:
                    handle = obj(self.streams, self.xlsx)
                    handle.start()
 
-                except:
+                except Exception as e:
                     if module:
+                        print e
                         print 'load module: %s failed!!!!' % module
                     pass
 

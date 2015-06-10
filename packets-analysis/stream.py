@@ -74,10 +74,13 @@ class TCP_STREAM:
                         self.streams[stream_id_revert]['s_des'] = des_revert
                         self.streams[stream_id_revert]['data_len'] += len(tcppkt.data)
                     else:#new
-                        if packet['flags'] & dpkt.tcp.TH_SYN:
+                        if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
+                           print 'SYN-ACK'
+                        elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == dpkt.tcp.TH_SYN:
                            print 'SYN'
-                        else:
-                           print 'not SYN'
+                        elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
+                           print 'ACK'
+                           return 
                         self.streams[stream_id] = {} 
                         self.streams[stream_id]['c_ip'] = src
                         self.streams[stream_id]['s_ip'] = dst
