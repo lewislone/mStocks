@@ -16,7 +16,7 @@ class SEQ_ACK:
             self.timeformat = self.xlsx.add_format()
             self.timeformat.set_num_format('0.00000000')
 
-        def count_data_inflight(self, seq, seqtime, ack, acktime):
+        def data_inflight(self, seq, seqtime, ack, acktime):
             '''outstanding bytes'''
             i = 0
             send = 0
@@ -72,7 +72,7 @@ class SEQ_ACK:
                 win = [self.streams[id]['c_packets'][i]['win'] for i in range(0, len(self.streams[id]['c_packets']))]
                 seqtime = [self.streams[id]['s_packets'][i]['ts']-self.streams[id]['start_time'] for i in range(0, len(self.streams[id]['s_packets']))]
                 acktime = [self.streams[id]['c_packets'][i]['ts']-self.streams[id]['start_time'] for i in range(0, len(self.streams[id]['c_packets']))]
-                flight = self.count_data_inflight(seq, seqtime, ack, acktime) 
+                flight = self.data_inflight(seq, seqtime, ack, acktime) 
                 ack[0] = 0
                 sheet.write('A'+str(index), 'seqtime')
                 sheet.write('A'+str(index+1), 'seq')

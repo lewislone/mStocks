@@ -62,17 +62,22 @@ class TCP_STREAM:
                     packet['seq'] = tcppkt.seq
                     packet['ack'] = tcppkt.ack
                     packet['win'] = tcppkt.win 
+                    packet['data_len'] = len(tcppkt.data)
+                    #print 'len of tcppkt.data: ' + str(len(tcppkt.data))
+                    #print 'value of tcpkt.hdrlen: ' + str(tcppkt.__hdr_len__)
+                    #print 'len of ippkt.data: ' + str(len(ippkt.data))
+                    #print 'value of ippkt.len: ' + str(ippkt.len)
                     stream_id = hashlib.md5(des).hexdigest()
                     stream_id_revert = hashlib.md5(des_revert).hexdigest()
 
                     if stream_id in self.streams:
                         self.streams[stream_id]['c_packets'].append(packet)
                         self.streams[stream_id]['c_des'] = des
-                        self.streams[stream_id]['data_len'] += len(tcppkt.data)
+                        self.streams[stream_id]['c_data_len'] += len(tcppkt.data)
                     elif stream_id_revert in self.streams:
                         self.streams[stream_id_revert]['s_packets'].append(packet)
                         self.streams[stream_id_revert]['s_des'] = des_revert
-                        self.streams[stream_id_revert]['data_len'] += len(tcppkt.data)
+                        self.streams[stream_id_revert]['s_data_len'] += len(tcppkt.data)
                     else:#new
                         if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
                            print 'SYN-ACK'
@@ -86,7 +91,8 @@ class TCP_STREAM:
                         self.streams[stream_id]['s_ip'] = dst
                         self.streams[stream_id]['c_port'] = tcppkt.sport 
                         self.streams[stream_id]['s_port'] = tcppkt.dport 
-                        self.streams[stream_id]['data_len'] = 0 
+                        self.streams[stream_id]['c_data_len'] = 0 
+                        self.streams[stream_id]['s_data_len'] = 0 
                         self.streams[stream_id]['start_time'] = ts
                         self.streams[stream_id]['c_packets'] = []
                         self.streams[stream_id]['s_packets'] = []
