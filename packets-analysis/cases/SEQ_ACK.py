@@ -67,6 +67,10 @@ class SEQ_ACK:
 
             index = 1 
             for id in self.streams:
+                if len(self.streams[id]['c_packets']) == 0 or len(self.streams[id]['s_packets']) == 0:
+                    continue
+                if len(self.streams[id]['s_packets']) <= 5:
+                    continue
                 seq = [self.streams[id]['s_packets'][i]['seq']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['s_packets']))]
                 ack = [self.streams[id]['c_packets'][i]['ack']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['c_packets']))]
                 win = [self.streams[id]['c_packets'][i]['win'] for i in range(0, len(self.streams[id]['c_packets']))]
@@ -87,8 +91,8 @@ class SEQ_ACK:
                 sheet.write_row('B'+str(index+4), ack)
                 sheet.write_row('B'+str(index+5), win)
 
-                if len(seq) <= 10:
-                    index += 5 
+                if len(seq) <= 20:
+                    index += 7 
                     continue
 
                 #chart SEQ

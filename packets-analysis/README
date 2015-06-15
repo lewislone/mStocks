@@ -1,6 +1,6 @@
-parse.py
+lll.py
 =======
-a tools to parse network package capture file and plot sent/ack pic run in xwindows
+a tools to parse network package capture file and export results into ./tmp/captureFileName.xlsx 
 
 getcwnd.py
 =======
@@ -11,34 +11,27 @@ getcwnd.sh
 a simple code to get cwnd data to store in file, if you want to use you must change port id in code
 
 
-depends
-======
-    +dpkt
-    +python-matplotlib
-
-    install dpkt:
-        $ tar -xvzf dpkt-1.7.tar.gz
-        $ cd dpkt-1.7
-        $ setup.py install
-
-    install python-matplotlib:
-        $ yum install python-matplotlib
-
-
 How to use
 ======
-    $ python parse.py <the path of network package capture file>
+    $ ./lib/Python/python lll.py <the path of network package capture file>
 
     $ python getcwnd.py <the path of cwnd info file>
 
 
-Note
+cases
 ======
-    after run cmd above in xwindows, a pic windows draw with sent/ack info will be show;
-    a new windows draw with receive-win will be show after close sent/ack windows;
+locate of analysis modules, you can add your own modules in it, there is a reference file 'sample.py'.
 
-    if there are more than one stream infos in your capture file, this tools will draw
-    three pictures(sent/ack, receive-win, byte-inflight) one by one for every stream in capture file;
-    But if you want to show pictures of next stream in capture file , you must close the three picures
-    of current stream;
+config.ini
+=====
+enable/disable modules in this file
+enable module 'SEQ_ACK.py' like this:
+    $cat config.ini
+    [Cases]
+    modules = SUM,SEQ_ACK
+
+
+depends
+=====
+python: v2.6 above
 

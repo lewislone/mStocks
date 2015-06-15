@@ -62,9 +62,10 @@ class TCP_STREAM:
                     packet['seq'] = tcppkt.seq
                     packet['ack'] = tcppkt.ack
                     packet['win'] = tcppkt.win 
-                    packet['data_len'] = len(tcppkt.data)
+                    packet['data_len'] = ippkt.len - tcppkt.__hdr_len__ - ippkt.__hdr_len__
                     #print 'len of tcppkt.data: ' + str(len(tcppkt.data))
                     #print 'value of tcpkt.hdrlen: ' + str(tcppkt.__hdr_len__)
+                    #print 'value of ippkt.hdrlen: ' + str(ippkt.__hdr_len__)
                     #print 'len of ippkt.data: ' + str(len(ippkt.data))
                     #print 'value of ippkt.len: ' + str(ippkt.len)
                     stream_id = hashlib.md5(des).hexdigest()
@@ -73,19 +74,19 @@ class TCP_STREAM:
                     if stream_id in self.streams:
                         self.streams[stream_id]['c_packets'].append(packet)
                         self.streams[stream_id]['c_des'] = des
-                        self.streams[stream_id]['c_data_len'] += len(tcppkt.data)
+                        self.streams[stream_id]['c_data_len'] += packet['data_len']
                     elif stream_id_revert in self.streams:
                         self.streams[stream_id_revert]['s_packets'].append(packet)
                         self.streams[stream_id_revert]['s_des'] = des_revert
-                        self.streams[stream_id_revert]['s_data_len'] += len(tcppkt.data)
+                        self.streams[stream_id_revert]['s_data_len'] += packet['data_len']
                     else:#new
-                        if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
-                           print 'SYN-ACK'
-                        elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == dpkt.tcp.TH_SYN:
-                           print 'SYN'
-                        elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
-                           print 'ACK'
-                           return 
+                       # if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
+                       #    print 'SYN-ACK'
+                       # elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == dpkt.tcp.TH_SYN:
+                       #    print 'SYN'
+                       # elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
+                       #    print 'ACK'
+                       #    return 
                         self.streams[stream_id] = {} 
                         self.streams[stream_id]['c_ip'] = src
                         self.streams[stream_id]['s_ip'] = dst
@@ -97,3 +98,5 @@ class TCP_STREAM:
                         self.streams[stream_id]['c_packets'] = []
                         self.streams[stream_id]['s_packets'] = []
                         self.streams[stream_id]['c_packets'].append(packet)
+                        self.streams[stream_id]['c_des'] = '' 
+                        self.streams[stream_id]['s_des'] = '' 

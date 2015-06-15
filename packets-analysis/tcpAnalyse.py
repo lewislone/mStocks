@@ -1,5 +1,6 @@
 #coding: UTF-8
 import os, sys, os, stat
+import traceback
 import config
 sys.path.append('./lib/XlsxWriter-0.7.3/')
 import xlsxwriter
@@ -34,7 +35,8 @@ class ANALYSIS_TCP:
 
                 except Exception as e:
                     if module:
-                        print e
+                        #print e
+                        print traceback.print_exc()
                         print 'load module: %s failed!!!!' % module
                     pass
 
