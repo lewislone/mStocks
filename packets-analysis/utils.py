@@ -3,6 +3,10 @@
 abc=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A']
 
 def nu2abc(nu):
+    #excel2010 max column
+    if nu >= 16383:
+        return 'XFD'
+
     ab='' 
     l = len(abc) - 1
     remain = nu + 1 
