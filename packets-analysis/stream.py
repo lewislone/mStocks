@@ -24,6 +24,7 @@ class TCP_STREAM:
                                                    'flags': ,
                                                    'seq': ,
                                                    'ack': ,
+                                                   'data_len',
                                                    'win': }, {},{},... ,{...}],
                                     's_des':,
                                     's_packets':[{
@@ -36,6 +37,7 @@ class TCP_STREAM:
                                                    'flags': ,
                                                    'seq': ,
                                                    'ack': ,
+                                                   'data_len',
                                                    'win': }, {},{},... ,{...}],
                                     'data_len':,
                                     'statt_time':,
