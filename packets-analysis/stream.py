@@ -53,6 +53,7 @@ class TCP_STREAM:
                     des_revert = dst + ":" + str(tcppkt.dport) + " -> " + src + ":" + str(tcppkt.sport)
                     packet = {}
                     packet['ts'] = ts
+                    packet['ttl'] = ippkt.ttl 
                     packet['src'] = src
                     packet['dst'] = dst
                     packet['id'] = ippkt.id
@@ -62,7 +63,7 @@ class TCP_STREAM:
                     packet['seq'] = tcppkt.seq
                     packet['ack'] = tcppkt.ack
                     packet['win'] = tcppkt.win 
-                    packet['data_len'] = ippkt.len - tcppkt.__hdr_len__ - ippkt.__hdr_len__
+                    packet['data_len'] = ippkt.len - tcppkt.__hdr_len__ - len(tcppkt.opts) - ippkt.__hdr_len__
                     #print 'len of tcppkt.data: ' + str(len(tcppkt.data))
                     #print 'value of tcpkt.hdrlen: ' + str(tcppkt.__hdr_len__)
                     #print 'value of ippkt.hdrlen: ' + str(ippkt.__hdr_len__)
@@ -79,6 +80,9 @@ class TCP_STREAM:
                         self.streams[stream_id_revert]['s_packets'].append(packet)
                         self.streams[stream_id_revert]['s_des'] = des_revert
                         self.streams[stream_id_revert]['s_data_len'] += packet['data_len']
+                        #init self.streams[stream_id_revert]['c_packets'][0]['ack']
+                        if len(self.streams[stream_id_revert]['s_packets']) == 1:
+                            self.streams[stream_id_revert]['c_packets'][0]['ack'] = self.streams[stream_id_revert]['s_packets'][0]['seq']
                     else:#new
                        # if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
                        #    print 'SYN-ACK'
