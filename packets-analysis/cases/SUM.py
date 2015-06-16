@@ -10,7 +10,10 @@ class SUM:
             self.xlsx = xlsx
             self.streams = streams_info
             self.mini_rto = 0.2
-            self.catalog_format = self.xlsx.add_format({'bold': True, 'font_color': 'red'})
+            self.default = self.xlsx.add_format()
+            self.catalog_format = self.xlsx.add_format({'bold': True, 'font_color': 'blue'})
+            self.catalog_format.set_align('center')
+            self.uncomplete_format = self.xlsx.add_format({'bg_color': 'red'})
 
         def search_in_box(self, box, pos, len):
             ret = 0
@@ -46,6 +49,7 @@ class SUM:
             lastseq, lastack = 1, 0
             dupack = 0
             retransmit = 0
+            complete = 0
             ofo = []
             rto = []
             re = []
@@ -82,6 +86,11 @@ class SUM:
                     j = j + 1
 
                 ###receive ack likeness
+                #3 hands shake
+                if (stream['c_packets'][i]['flags'] & (dpkt.tcp.TH_ACK)) == dpkt.tcp.TH_ACK \
+                        and stream['c_packets'][i]['seq']-stream['c_packets'][0]['seq'] == 1 \
+                        and stream['c_packets'][i]['data_len'] == 0:
+                        complete = 1
                 #duplicate ack
                 if lastack < ack[i]:
                     lastack = ack[i]
@@ -104,7 +113,7 @@ class SUM:
 
                 i = i + 1
 
-            ret['initcwnd'] = ' '.join(init_cwnd)
+            ret['initcwnd'] = ';'.join(init_cwnd)
             ret['rtt'] = rtt 
             ret['rto'] = len(rto) 
             ret['re'] = len(re) 
@@ -113,6 +122,7 @@ class SUM:
             ret['minirtt'] = minirtt 
             ret['maxrtt'] = maxrtt 
             ret['syn_re'] = len(syn_re)
+            ret['complete'] = complete 
             return ret 
 
         def start(self):
@@ -156,7 +166,7 @@ class SUM:
                 #time
                 i = c_len - 1
                 while i > 0: 
-                    if self.streams[id]['c_packets'][i]['flags'] & dpkt.tcp.TH_FIN:
+                    if self.streams[id]['c_packets'][i]['flags'] & (dpkt.tcp.TH_FIN|dpkt.tcp.TH_RST) != 0:
                        sheet.write('C'+str(index), self.streams[id]['c_packets'][i]['ts']-self.streams[id]['start_time'])
                        break
                     i -= 1
@@ -202,6 +212,9 @@ class SUM:
                 sheet.write('K'+str(index), result['syn_re'])
                 #initcwnd
                 sheet.write('L'+str(index), result['initcwnd'])
+
+                if result['complete'] == 0:
+                    sheet.set_row(index,15,self.uncomplete_format)
 
                 index = index + 1
     

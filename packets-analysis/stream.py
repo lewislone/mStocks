@@ -87,6 +87,8 @@ class TCP_STREAM:
                        # elif packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
                        #    print 'ACK'
                        #    return 
+                        if (packet['flags'] & dpkt.tcp.TH_SYN) != dpkt.tcp.TH_SYN:
+                            return 
                         self.streams[stream_id] = {} 
                         self.streams[stream_id]['c_ip'] = src
                         self.streams[stream_id]['s_ip'] = dst
