@@ -11,13 +11,22 @@ if __name__ == '__main__':
         print cap_file + " not exist"
         exit()
 
+    if cap_file.split('.')[-1] == 'json':
+        file = open(cap_file,"r")
+        streams = json.load(file)
+        analysis = tcpAnalyse.ANALYSIS_TCP(cap_file, streams)
+        analysis.start()
+        analysis.save_work()
+        exit()
+
+    
     collect = parse.PCAP_PARSE()
     f = file(cap_file)
     #f = file("/home/lewis/work/tmp/xx.cap")
     collect.collect_streams(f)
     #print collect.stream.streams
 
-    file = open(cap_file + 'stream.json', "ab")
+    file = open(cap_file + 'stream.json', "wb")
     json.dump(collect.stream.streams, file)
 
     analysis = tcpAnalyse.ANALYSIS_TCP(cap_file, collect.stream.streams)
