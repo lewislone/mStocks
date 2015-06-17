@@ -41,12 +41,68 @@ class TCP_STREAM:
                                                    'win': }, {},{},... ,{...}],
                                     'data_len':,
                                     'statt_time':,
-                                    'end_time':},
+                                    'end_time':
+                                    'http':[{
+                                              'request':{'method':, 'uri':, 'headers':}
+                                              'respones':{'status':, 'reason':, 'headers':}
+                                             }, {}]
+                                    }, {},{},... ,{...}],
+                                    },
                         'id_2':   {...},
                                ...,
                         'id_x':   {...}}
             '''
             self.streams = {} 
+            self.http_req = dpkt.http.Request
+            self.http_res = dpkt.http.Response
+
+        def http(self, pkt, stream, data_len, http_type, ts):
+            if data_len <= 0: 
+                return
+
+            sindex = len(stream['s_packets'])
+            pointer = 0
+            try:
+                msg = http_type(pkt, pointer)
+            except dpkt.Error, error: # if the message failed
+                if pointer == 0: # if this is the first message
+                    #print('Invalid http: %s' % error)
+                    return
+                else: # we're done parsing messages
+                    #print("We got a dpkt.Error %s, but we are done." % error)
+                    #break # out of the loop
+                    return
+            except:
+                print("Unkown error.")
+                return
+            # ok, all good
+            if http_type == dpkt.http.Request:
+                '''client > server'''
+                http = {}
+                http['request'] = {} 
+                http['request']['uri'] = msg.uri
+                http['request']['method'] = msg.method
+                http['request']['headers'] = msg.headers
+                http['request']['index'] = sindex 
+                http['request']['ts'] = ts 
+                stream['http'].append(http)
+            else:
+                '''server > client'''
+                i = len(stream['http']) - 1
+                if len(stream['http']) == 0:
+                    i = 0
+                    http = {}
+                    stream['http'].append(http)
+                else:
+                    http = stream['http'][i]
+                http['response'] = {}
+                http['response']['status'] = msg.status
+                http['response']['reason'] = msg.reason
+                http['response']['headers'] = msg.headers
+                http['response']['index'] = sindex 
+                http['response']['ts'] = ts 
+
+
         def add(self, ts, ippkt, tcppkt):
             if isinstance(tcppkt, dpkt.tcp.TCP): #TCP
                     dst = '%d.%d.%d.%d' % tuple(map(ord, list(ippkt.dst)))
@@ -78,6 +134,7 @@ class TCP_STREAM:
                         self.streams[stream_id]['c_packets'].append(packet)
                         self.streams[stream_id]['c_des'] = des
                         self.streams[stream_id]['c_data_len'] += packet['data_len']
+                        self.http(tcppkt.data, self.streams[stream_id], packet['data_len'], self.http_req, ts)
                     elif stream_id_revert in self.streams:
                         self.streams[stream_id_revert]['s_packets'].append(packet)
                         self.streams[stream_id_revert]['s_des'] = des_revert
@@ -85,6 +142,7 @@ class TCP_STREAM:
                         #init self.streams[stream_id_revert]['c_packets'][0]['ack']
                         if len(self.streams[stream_id_revert]['s_packets']) == 1:
                             self.streams[stream_id_revert]['c_packets'][0]['ack'] = self.streams[stream_id_revert]['s_packets'][0]['seq']
+                        self.http(tcppkt.data, self.streams[stream_id_revert], packet['data_len'], self.http_res, ts)
                     else:#new
                        # if packet['flags'] & (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK) == (dpkt.tcp.TH_SYN | dpkt.tcp.TH_ACK):
                        #    print 'SYN-ACK'
@@ -108,3 +166,5 @@ class TCP_STREAM:
                         self.streams[stream_id]['c_packets'].append(packet)
                         self.streams[stream_id]['c_des'] = '' 
                         self.streams[stream_id]['s_des'] = '' 
+                        self.streams[stream_id]['http'] = []
+

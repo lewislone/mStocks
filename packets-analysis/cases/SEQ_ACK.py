@@ -69,6 +69,8 @@ class SEQ_ACK:
 
             index = 2 
             for id in self.streams:
+                if self.streams[id]['s_port'] == 30000 and self.streams[id]['c_port'] == 28288:#encrypt stream by ws
+                    continue
                 if len(self.streams[id]['c_packets']) == 0 or len(self.streams[id]['s_packets']) == 0:
                     continue
                 if len(self.streams[id]['s_packets']) <= 5:

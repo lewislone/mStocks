@@ -50,6 +50,7 @@ class SUM:
             dupack = 0
             retransmit = 0
             complete = 0
+            firstdata = 0
             ofo = []
             rto = []
             re = []
@@ -63,9 +64,6 @@ class SUM:
                     if acktime[i] < seqtime[j]:
                         break
                     ###send data likeness
-                    #init cwnd
-                    if i > 0 and ack[i-1] == 1 and ack[i] != 1 and stream['s_packets'][j]['data_len'] != 0:
-                       init_cwnd.append(str(stream['s_packets'][j]['data_len']))
                     #retransmint
                     if lastseq == seq[j] or lastseq == lastack:
                         lastseq = seq[j] + stream['s_packets'][j]['data_len']
@@ -82,7 +80,12 @@ class SUM:
                                 syn_re.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
                         else:
                             ofo.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
-                        
+
+                    #init cwnd
+                    if firstdata == 0 and stream['s_packets'][j]['data_len'] > 0:
+                       firstdata = j 
+                    if firstdata != 0 and seqtime[j] - seqtime[firstdata] < 0.001:#assume send one cwnd packet in 1ms
+                       init_cwnd.append(str(stream['s_packets'][j]['data_len']))
                     j = j + 1
 
                 ###receive ack likeness
@@ -164,12 +167,16 @@ class SUM:
                 sheet.write('B'+str(index), self.streams[id]['s_data_len'])
 
                 #time
+                timecost = 0
                 i = c_len - 1
                 while i > 0: 
                     if self.streams[id]['c_packets'][i]['flags'] & (dpkt.tcp.TH_FIN|dpkt.tcp.TH_RST) != 0:
-                       sheet.write('C'+str(index), self.streams[id]['c_packets'][i]['ts']-self.streams[id]['start_time'])
+                       timecost = self.streams[id]['c_packets'][i]['ts'] - self.streams[id]['start_time']
                        break
                     i -= 1
+                if timecost == 0:
+                    timecost = self.streams[id]['c_packets'][c_len-1]['ts'] - self.streams[id]['start_time']
+                sheet.write('C'+str(index), timecost)
                 #synrtt
                 i = 0
                 while i < c_len: 
@@ -212,9 +219,39 @@ class SUM:
                 sheet.write('K'+str(index), result['syn_re'])
                 #initcwnd
                 sheet.write('L'+str(index), result['initcwnd'])
-
                 if result['complete'] == 0:
                     sheet.set_row(index,15,self.uncomplete_format)
+
+                ##http
+                sheet.write('M1', 'code', self.catalog_format)
+                sheet.write('N1', 'host', self.catalog_format)
+                sheet.write('O1', 'uri', self.catalog_format)
+                sheet.set_column(13, 13, 20) #set A column's width to 40
+                if len(self.streams[id]['http']) > 0:
+                    i = 0
+                    while i < len(self.streams[id]['http']):
+                            if self.streams[id]['http'][i].has_key('response'):
+                                sheet.write('M'+str(index+i), self.streams[id]['http'][i]['response']['status'])
+                            if self.streams[id]['http'][i].has_key('request'):
+                                if self.streams[id]['http'][i]['request']['method'] == "GET" \
+                                        or self.streams[id]['http'][i]['request']['method'] == "POST":
+                                    x = self.streams[id]['http'][i]['request']['index']
+                                    get_data_time = self.streams[id]['http'][i]['request']['ts']
+                                    while x < len(seq):
+                                        if self.streams[id]['s_packets'][x]['data_len'] > 0:
+                                            first_data_time = self.streams[id]['s_packets'][x]['ts']
+                                            print (len(seqtime), self.streams[id]['http'][i]['request']['index'], x)
+                                            break
+                                        x = x + 1
+                                    #TTFB
+                                    sheet.write('E'+str(index+i), first_data_time - get_data_time)
+                                #uri    
+                                sheet.write('O'+str(index+i), self.streams[id]['http'][i]['request']['uri'])
+                                if self.streams[id]['http'][i]['request']['headers'].has_key('host'):
+                                    #host
+                                    sheet.write('N'+str(index+i), self.streams[id]['http'][i]['request']['headers']['host'])
+                            i = i + 1
+                    index = index + i - 1 
 
                 index = index + 1
     
