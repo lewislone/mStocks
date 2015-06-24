@@ -14,6 +14,9 @@ class SUM:
             self.catalog_format = self.xlsx.add_format({'bold': True, 'font_color': 'blue'})
             self.catalog_format.set_align('center')
             self.uncomplete_format = self.xlsx.add_format({'bg_color': 'red'})
+            self.stream_format = self.xlsx.add_format({'bg_color': 'gray'})
+            self.center_format = self.xlsx.add_format({'bold': True})
+            self.center_format.set_align('center')
 
         def search_in_box(self, box, pos, len):
             ret = 0
@@ -54,7 +57,7 @@ class SUM:
             ofo = []
             rto = []
             re = []
-            syn_re = []
+            syn = []
             rtt = []
             init_cwnd = []
             len_ack = len(ack)
@@ -64,6 +67,8 @@ class SUM:
                     if acktime[i] < seqtime[j]:
                         break
                     ###send data likeness
+                    if stream['s_packets'][j]['flags'] & dpkt.tcp.TH_SYN:
+                        syn.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
                     #retransmint
                     if lastseq == seq[j] or lastseq == lastack:
                         lastseq = seq[j] + stream['s_packets'][j]['data_len']
@@ -76,8 +81,6 @@ class SUM:
                                 rto.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
                             else:
                                 re.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
-                            if stream['s_packets'][j]['flags'] & dpkt.tcp.TH_SYN:
-                                syn_re.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
                         else:
                             ofo.append([seqtime[j], seq[j], stream['s_packets'][j]['data_len']])
 
@@ -94,13 +97,13 @@ class SUM:
                         and stream['c_packets'][i]['seq']-stream['c_packets'][0]['seq'] == 1 \
                         and stream['c_packets'][i]['data_len'] == 0:
                         complete = 1
+                if stream['c_packets'][i]['flags'] & dpkt.tcp.TH_SYN:
+                    syn.append([acktime[i], ack[i], stream['c_packets'][i]['data_len']])
                 #duplicate ack
                 if lastack < ack[i]:
                     lastack = ack[i]
                 elif lastack <= ack[i]:
                     dupack += 1
-                    if stream['c_packets'][i]['flags'] & dpkt.tcp.TH_SYN:
-                        syn_re.append([acktime[i], ack[i], stream['c_packets'][i]['data_len']])
                 #rtt
                 k = 0 
                 while k < j:
@@ -124,7 +127,7 @@ class SUM:
             ret['dupack'] = dupack 
             ret['minirtt'] = minirtt 
             ret['maxrtt'] = maxrtt 
-            ret['syn_re'] = len(syn_re)
+            ret['syn'] = len(syn)-2
             ret['complete'] = complete 
             return ret 
 
@@ -132,6 +135,7 @@ class SUM:
             print '###'
             print 'start case: SUM :)'
             sheet = self.xlsx.add_worksheet('sum')
+            sheet.freeze_panes(1, 0)
             #catalog
             sheet.set_column(0, 0, 45) #set A column's width to 40
             sheet.write('A1', 'stream', self.catalog_format)
@@ -155,6 +159,8 @@ class SUM:
             for id in self.streams:
                 if len(self.streams[id]['c_packets']) <= 1 or len(self.streams[id]['s_packets']) <= 1:
                     continue
+                if self.streams[id]['c_port'] == 28288 and self.streams[id]['s_port'] == 30000:
+                    continue
                 seq = [self.streams[id]['s_packets'][i]['seq']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['s_packets']))]
                 ack = [self.streams[id]['c_packets'][i]['ack']-self.streams[id]['s_packets'][0]['seq'] for i in range(0, len(self.streams[id]['c_packets']))]
                 data_len = [self.streams[id]['s_packets'][i]['data_len'] for i in range(0, len(self.streams[id]['s_packets']))]
@@ -163,7 +169,8 @@ class SUM:
 
                 c_len = len(self.streams[id]['c_packets'])
                 s_len = len(self.streams[id]['s_packets'])
-                sheet.write('A'+str(index), self.streams[id]['c_des'])
+                sheet.write('A'+str(index), self.streams[id]['c_des'], self.stream_format)
+                #data_len
                 sheet.write('B'+str(index), self.streams[id]['s_data_len'])
 
                 #time
@@ -216,7 +223,7 @@ class SUM:
                 #minirtt
                 sheet.write('J'+str(index), result['minirtt'])
                 #syn retransmint
-                sheet.write('K'+str(index), result['syn_re'])
+                sheet.write('K'+str(index), result['syn'])
                 #initcwnd
                 sheet.write('L'+str(index), result['initcwnd'])
                 if result['complete'] == 0:
@@ -231,20 +238,39 @@ class SUM:
                     i = 0
                     while i < len(self.streams[id]['http']):
                             if self.streams[id]['http'][i].has_key('response'):
+                                #response code
                                 sheet.write('M'+str(index+i), self.streams[id]['http'][i]['response']['status'])
                             if self.streams[id]['http'][i].has_key('request'):
                                 if self.streams[id]['http'][i]['request']['method'] == "GET" \
                                         or self.streams[id]['http'][i]['request']['method'] == "POST":
-                                    x = self.streams[id]['http'][i]['request']['index']
+                                    s = self.streams[id]['http'][i]['request']['sindex']
                                     get_data_time = self.streams[id]['http'][i]['request']['ts']
-                                    while x < len(seq):
-                                        if self.streams[id]['s_packets'][x]['data_len'] > 0:
-                                            first_data_time = self.streams[id]['s_packets'][x]['ts']
-                                            print (len(seqtime), self.streams[id]['http'][i]['request']['index'], x)
+                                    while s < len(seq):
+                                        if self.streams[id]['s_packets'][s]['data_len'] > 0:
+                                            first_data_time = self.streams[id]['s_packets'][s]['ts']
                                             break
-                                        x = x + 1
+                                        s = s + 1
                                     #TTFB
                                     sheet.write('E'+str(index+i), first_data_time - get_data_time)
+                                    #data_len
+                                    c = self.streams[id]['http'][i]['request']['cindex'] - 1
+                                    first_ack = self.streams[id]['c_packets'][c]['ack']
+                                    first_time = self.streams[id]['c_packets'][c]['ts']
+                                    if i == len(self.streams[id]['http']) - 1:#last GET
+                                        n = len(self.streams[id]['c_packets'])-1
+                                        while n > 0:
+                                            if self.streams[id]['c_packets'][n]['flags'] & dpkt.tcp.TH_RST != dpkt.tcp.TH_RST:
+                                                break
+                                            n = n - 1
+                                        last_ack = self.streams[id]['c_packets'][n]['ack']
+                                        last_time = timecost + self.streams[id]['start_time'] 
+                                    else:
+                                        c = self.streams[id]['http'][i+1]['request']['cindex'] - 1
+                                        last_ack = self.streams[id]['c_packets'][c-1]['ack']
+                                        last_time = self.streams[id]['c_packets'][c-1]['ts']
+                                    sheet.write('B'+str(index+i), last_ack - first_ack)
+                                    #time
+                                    sheet.write('C'+str(index+i), last_time - first_time)
                                 #uri    
                                 sheet.write('O'+str(index+i), self.streams[id]['http'][i]['request']['uri'])
                                 if self.streams[id]['http'][i]['request']['headers'].has_key('host'):
@@ -254,5 +280,22 @@ class SUM:
                     index = index + i - 1 
 
                 index = index + 1
-    
+
+            lastindex = index
+            index = lastindex + 1
+            #max
+            index = index + 1
+            sheet.write('A'+str(index), 'MAX', self.center_format)
+            for a in ('B','C','D','E','F','G','H','I','J','K'):
+                sheet.write_formula(a+str(index), '=MAX(%s2:%s%d)'%(a, a, lastindex))
+            #mini
+            index = index + 1
+            sheet.write('A'+str(index), 'MIN', self.center_format)
+            for a in ('B','C','D','E','F','G','H','I','J','K'):
+                sheet.write_formula(a+str(index), '=MIN(%s2:%s%d)'%(a, a, lastindex))
+            #avg
+            index = index + 1
+            sheet.write('A'+str(index), 'AVG', self.center_format)
+            for a in ('B','C','D','E','F','G','H','I','J','K'):
+                sheet.write_formula(a+str(index), '=AVERAGE(%s2:%s%d)'%(a, a, lastindex))
             print 'finish case: SUM :)'

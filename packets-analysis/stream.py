@@ -61,6 +61,7 @@ class TCP_STREAM:
                 return
 
             sindex = len(stream['s_packets'])
+            cindex = len(stream['c_packets'])
             pointer = 0
             try:
                 msg = http_type(pkt, pointer)
@@ -83,7 +84,8 @@ class TCP_STREAM:
                 http['request']['uri'] = msg.uri
                 http['request']['method'] = msg.method
                 http['request']['headers'] = msg.headers
-                http['request']['index'] = sindex 
+                http['request']['sindex'] = sindex 
+                http['request']['cindex'] = cindex 
                 http['request']['ts'] = ts 
                 stream['http'].append(http)
             else:
@@ -99,7 +101,8 @@ class TCP_STREAM:
                 http['response']['status'] = msg.status
                 http['response']['reason'] = msg.reason
                 http['response']['headers'] = msg.headers
-                http['response']['index'] = sindex 
+                http['response']['sindex'] = sindex 
+                http['response']['cindex'] = cindex 
                 http['response']['ts'] = ts 
 
 
