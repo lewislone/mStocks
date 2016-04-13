@@ -1,32 +1,18 @@
-'''
-{"table"    : ,
- "types"    : {"key1":'int', "key2":'float', "key3":'string' },
- "data"     : [
-                { "uid"     : ,
-                  "ts"      : ,
-                  "opt_num" : ,
-                  "data"    : [value1,value2,value3...]},
-                { "uid"     : ,
-                  "ts"      : ,
-                  "opt_num" : ,
-                  "data"    : [value1,value2,value3...]},
-                {},
-               ],
-}
-'''
+# -*- coding: utf-8 -*-
 
-industry_classified = {
+VERSION = '0.0.1'
+data_sample = {
  "table"    : 'industry_classified',
  "types"    : {"code":'int', "name":'string', "c_name":'string' },
  "data"     : [
                 { "uid"     : ,
                   "ts"      : ,
-                  "opt_num" : ,
-                  "data"    : [value1,value2,value3]},
+                  "opt" : ,
+                  "values"    : [value1,value2,value3]},
                 { "uid"     : ,
                   "ts"      : ,
-                  "opt_num" : ,
-                  "data"    : [value1,value2,value3]},
+                  "opt" : ,
+                  "values"    : [value1,value2,value3]},
                 {},
                ],
 }
