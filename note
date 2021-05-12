@@ -1,0 +1,14 @@
+###mptcp
+- socket()
+  - __sys_socket
+    - sock_create
+      - __sock_create
+        - sock_alloc
+        - inet_create
+          - sk_alloc
+          - sock_init_data
+            - sock->sk_wq = socket->wq
+            - sock->sk_refcnt = 1 
+          - mptcp_init_sock
+    - sock_map_fd
+- connect()
