@@ -7,13 +7,17 @@ import urllib
 import urllib2
 
 url_head_lumia = 'http://bbs.dospy.com/'
+url_head_fishxm = 'http://bbs.xmfish.com/'
 url = {'lumia': 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&page=',
         'psp': 'http://bbs.dospy.com//forumdisplay.php?fid=141&filter=type&typeid=391&orderby=dateline&page=',
         'filco': 'http://www.diatec.co.jp/shop/det.php?prod_c=888',
         'mac': 'http://bbs.feng.com/forum.php?mod=forumdisplay&fid=29&orderby=lastpost&typeid=84&orderby=lastpost&typeid=84&filter=lastpost&page=',
+        'sea': 'http://bbs.xmfish.com/thread-htm-fid-55-search-all-orderway-postdate-asc-DESC-page-1.html',
     }
 filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
 filter_filco = '<TD ALIGN="left" class=text2>(.*?)</TD></TR>'
+filter_sea = '<a href="read-htm-tid-(\d*).html" name="readlinkt" target="_blank" id=(.*?) class="subject_t f14">(.*?)</a>&nbsp; <span class="s2 w"></span>'
+#filter_sea = '<a href="(.*?)" name="(.*?)" target="(.*?)" id="(.*?)" class="subject_t f14">(.*?)</a>&nbsp; <span class="s2 w"></span>'
 
 
 stock_list = [
@@ -43,6 +47,17 @@ def getFilcoInfo(url, keyword):
         myItems = re.findall(filter_filco, html, re.S)
         for item in myItems:
             print item.decode('utf-8')
+
+def getFilcoSea(url, keyword):
+        html = getPageSourceCode(url)
+        myItems = re.findall(filter_sea, html, re.S)
+        for item in myItems:
+            #print item[0]
+            #print item[1]
+            #print item[2]
+            if item[2].decode('utf-8').find(keyword) != -1:
+                print item[2].decode('utf-8')
+                print url_head_fishxm + 'read-htm-tid-' + item[0] + '.html'
 
 def getLumiaInfo(url, keyword):
         html = getPageSourceCode(url)
@@ -101,6 +116,9 @@ def getstocksInfo():
 
 def print_help():
     print '''a kid tool'''
+    print '''python lumia800.py $'''
+    print '''python lumia800.py filco'''
+    print '''python lumia800.py lumia'''
 
 if __name__ == '__main__':
     if sys.argv[1] == '-h':
@@ -119,7 +137,17 @@ if __name__ == '__main__':
         print 'done\n'
         sys.exit(1)
 
-    if len(sys.argv[1]) != 0 and len(sys.argv[2]) != 0:
+    if sys.argv[1] == 'sea':
+        while 1: 
+            getFilcoSea(url[sys.argv[1]], u'海缸')
+            getFilcoSea(url[sys.argv[1]], u'海水')
+            getFilcoSea(url[sys.argv[1]], u'珊瑚')
+            getFilcoSea(url[sys.argv[1]], u'海鱼')
+            time.sleep(600)
+        print 'done\n'
+        sys.exit(1)
+
+    if sys.argv[1] == 'lumia':
        #while 1:
             for i in [1,2,3,4,5,6,7]:
                #getLumiaInfo(url_lumia + str(i), sys.argv[1])
