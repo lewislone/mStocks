@@ -6,88 +6,47 @@ import time
 import urllib
 import urllib2
 
-url_head_lumia = 'http://bbs.dospy.com/'
-url_head_fishxm = 'http://bbs.xmfish.com/'
-url = {'lumia': 'http://bbs.dospy.com/forumdisplay.php?fid=141&filter=type&typeid=388&orderby=dateline&page=',
-        'psp': 'http://bbs.dospy.com//forumdisplay.php?fid=141&filter=type&typeid=391&orderby=dateline&page=',
-        'filco': 'http://www.diatec.co.jp/shop/det.php?prod_c=888',
-        'mac': 'http://bbs.feng.com/forum.php?mod=forumdisplay&fid=29&orderby=lastpost&typeid=84&orderby=lastpost&typeid=84&filter=lastpost&page=',
-        'sea': 'http://bbs.xmfish.com/thread-htm-fid-55-search-all-orderway-postdate-asc-DESC-page-1.html',
-    }
-filter_lumia = ' <a href="thread-(.*?).html" target="_blank">(.*?)</a>'
-filter_filco = '<TD ALIGN="left" class=text2>(.*?)</TD></TR>'
-filter_sea = '<a href="read-htm-tid-(\d*).html" name="readlinkt" target="_blank" id=(.*?) class="subject_t f14">(.*?)</a>&nbsp; <span class="s2 w"></span>'
-#filter_sea = '<a href="(.*?)" name="(.*?)" target="(.*?)" id="(.*?)" class="subject_t f14">(.*?)</a>&nbsp; <span class="s2 w"></span>'
-
-
 stock_list = [
                 {'name': 'sh',   'code': 'sh000001', 'mPrice': '0', 'mNu': '0'},
                 {'name': 'sz',   'code': 'sz399001', 'mPrice': '0', 'mNu': '0'},
-                {'name': 'ylny', 'code': 'sh600277', 'mPrice': '11.867', 'mNu': '300'},
-                {'name': 'zgpa', 'code': 'sh601318', 'mPrice': '88.907', 'mNu': '100'},
-                {'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.093', 'mNu': '0'},
-                {'name': 'sdgf', 'code': 'sh600820', 'mPrice': '14.5', 'mNu': '0'},
-                {'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '0'},
-                {'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
-                {'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
-                {'name': 'wskj', 'code': 'sz300017', 'mPrice': '48.54', 'mNu': '0'},
+                {'name': 'thgf', 'code': 'sz002419', 'mPrice': '7.485', 'mNu': '1000'},
+                {'name': 'cqsw', 'code': 'sh601158', 'mPrice': '6.21', 'mNu': '500'},
+                #{'name': 'ylny', 'code': 'sh600277', 'mPrice': '11.867', 'mNu': '300'},
+                #{'name': 'zgpa', 'code': 'sh601318', 'mPrice': '88.907', 'mNu': '100'},
+                #{'name': 'nmhd', 'code': 'sh600863', 'mPrice': '4.093', 'mNu': '0'},
+                #{'name': 'sdgf', 'code': 'sh600820', 'mPrice': '14.5', 'mNu': '0'},
+                #{'name': 'nsly', 'code': 'sh600219', 'mPrice': '8.817', 'mNu': '0'},
+                #{'name': 'ylgf', 'code': 'sh600887', 'mPrice': '24.907', 'mNu': '0'},
+                #{'name': 'ypyl', 'code': 'sz300030', 'mPrice': '14.517', 'mNu': '0'},
+                #{'name': 'wskj', 'code': 'sz300017', 'mPrice': '48.54', 'mNu': '0'},
              ]
-url_stock = 'http://hq.sinajs.cn/list='
-
+url_stock = 'http://qt.gtimg.cn/q='
 
 def getPageSourceCode(url):
-        login_data = urllib.urlencode({})
-        login_headers = {'Referer':url, 'User-Agent':'Opera/9.60',}
-        login_request = urllib2.Request(url, login_data, login_headers)
-        html = urllib2.urlopen(login_request).read()
+	response = urllib2.urlopen(url)
+	html = response.read()
         return html.decode("gbk").encode("utf8")
 
-def getFilcoInfo(url, keyword):
-        html = getPageSourceCode(url)
-        myItems = re.findall(filter_filco, html, re.S)
-        for item in myItems:
-            print item.decode('utf-8')
-
-def getFilcoSea(url, keyword):
-        html = getPageSourceCode(url)
-        myItems = re.findall(filter_sea, html, re.S)
-        for item in myItems:
-            #print item[0]
-            #print item[1]
-            #print item[2]
-            if item[2].decode('utf-8').find(keyword) != -1:
-                print item[2].decode('utf-8')
-                print url_head_fishxm + 'read-htm-tid-' + item[0] + '.html'
-
-def getLumiaInfo(url, keyword):
-        html = getPageSourceCode(url)
-        myItems = re.findall(filter_lumia.decode("gbk").encode("utf8"), html, re.S)
-        for item in myItems:
-            if item[1].find(keyword) != -1:
-                print url_head_lumia + '/thread-' + item[0] + '.html'
-                print item[1]
-
-#var hq_str_sh600887="伊利股份,26.40,26.48,25.94,26.41,25.80,25.94,25.95,24212839,632218400,3700,25.94,48100,25.93,65800,25.92,77968,25.91,121100,25.90,149288,25.95,500,25.97,4200,25.98,63000,25.99,52300,26.00,2014-10-10,14:06:58,00";
+#v_sz002419="51~天虹股份~002419~7.61~7.66~7.58~331062~140295~190767~7.61~624~7.60~664~7.59~528~7.58~562~7.57~775~7.62~671~7.63~485~7.64~560~7.65~1085~7.66~2004~~20220216143330~-0.05~-0.65~7.66~7.41~7.61/331062/249256245~331062~24926~2.83~23.25~~7.66~7.41~3.26~88.93~88.95~2.15~8.43~6.89~0.62~-1652~7.53~26.00~35.10~~~0.30~24925.6245~0.0000~0~ ~GP-A~21.18~1.87~2.82~9.02~1.21~9.33~5.66~15.30~19.28~25.99~1168534766~1168847734~-20.76~9.18~1168534766";
 def getstockInfo(code):
     items = []
     codes = code.split(',')
     result = getPageSourceCode(url_stock + code)
+    #print result
     if len(codes) == 1:
        i = 0
     else:
        i = 1
     for item in result.split(";\n"):
-        items.append(item[len(codes[i])+len('var hq_str_')+1:].split(','))
+        items.append(item[len('v_')+len(codes[i])+len('="'):].split('~'))
     return items;
     
-    #return result[len(code)+len('var hq_str_')+1:].split(',') 
-
 def getstockInfos(code):
     result = getstockInfo(code)
     return result 
 
 def getstocksInfo():
-    print 'Time' + '\t\t\t' + 'Name' + '\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit' + '\t' + '%' + '\t' + 'mPrice'
+    print 'Time' + '\t\t' + 'Name' + '\t\t' + 'Price' + '\t\t' + 'Persent' + '\t\t\t' + 'own' + '\t' + 'profit' + '\t' + '%' + '\t' + 'mPrice'
     code = "" 
     for item in stock_list:
         code = code + ',' + item['code']
@@ -97,64 +56,25 @@ def getstocksInfo():
         if len(item) == 1:
            print "***\n"
            continue;
-        persent = (float(item[3]) - float(item[2])) / float(item[2]) * 100
-        if i == 0 or i == 1:
-            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent)
+        persent = (float(item[3]) - float(item[4])) / float(item[4]) * 100
+        profit = (float(item[3]) - float(stock_list[i]['mPrice'])) * int(stock_list[i]['mNu'])
+	if i > 1:
+           profit_persent = (float(item[3]) - float(stock_list[i]['mPrice'])) / float(stock_list[i]['mPrice']) * 100
         else:
-            profit = (float(item[3]) - float(stock_list[i]['mPrice'])) * int(stock_list[i]['mNu'])
-            profit_persent = (float(item[3]) - float(stock_list[i]['mPrice'])) / float(stock_list[i]['mPrice']) * 100
-            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) + '\t' + str(profit_persent) + '\t' + stock_list[i]['mPrice'] 
-        i += 1
-
-#    for item in stock_list:
-#        info = getstockInfo(item['code'])
-#        for item in info:
-#            if len(item) == 1:
-#               continue;
-#            persent = (float(item[3]) - float(item[2])) / float(item[2]) * 100
-#            print item[30] + ' ' + item[31] + ' ' + item[0][1:] + '\t' + item[3] + '\t\t' + str(persent) 
+           profit_persent = 0
+        print item[30] + '\t' + item[1]  + '\t' + item[3][0:7] + '\t\t' + str(persent) + '\t\t' + str(stock_list[i]['mNu']) + '\t' + str(profit) + '\t' + str(profit_persent)[0:5] + '\t' + stock_list[i]['mPrice'] 
+        i = i + 1
 
 def print_help():
     print '''a kid tool'''
-    print '''python lumia800.py $'''
-    print '''python lumia800.py filco'''
-    print '''python lumia800.py lumia'''
+    print '''python lumia800.py stock'''
 
 if __name__ == '__main__':
     if sys.argv[1] == '-h':
         print_help()
         sys.exit(1)
 
-    if sys.argv[1] == '$':
-       #while 1:
-            getstocksInfo()
-            #time.sleep(10)
-            print 'done\n'
-            sys.exit(1)
+    if sys.argv[1] == 'stock':
+       getstocksInfo()
+       sys.exit(1)
         
-    if sys.argv[1] == 'filco':
-        getFilcoInfo(url[sys.argv[1]], '')
-        print 'done\n'
-        sys.exit(1)
-
-    if sys.argv[1] == 'sea':
-        while 1: 
-            getFilcoSea(url[sys.argv[1]], u'娴风几')
-            getFilcoSea(url[sys.argv[1]], u'娴锋按')
-            getFilcoSea(url[sys.argv[1]], u'鐝婄憵')
-            getFilcoSea(url[sys.argv[1]], u'娴烽奔')
-            time.sleep(600)
-        print 'done\n'
-        sys.exit(1)
-
-    if sys.argv[1] == 'lumia':
-       #while 1:
-            for i in [1,2,3,4,5,6,7]:
-               #getLumiaInfo(url_lumia + str(i), sys.argv[1])
-               #getLumiaInfo(url_psp + str(i), sys.argv[1])
-               getLumiaInfo(url[sys.argv[1]] + str(i), sys.argv[2])
-               print '\n'
-            print 'done'
-            #time.sleep(600)
-            sys.exit(1)
-
